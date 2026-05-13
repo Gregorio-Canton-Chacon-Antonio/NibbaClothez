@@ -15,19 +15,10 @@ Finalmente, el proyecto busca ofrecer una alternativa práctica para la compra y
 
 ### Integrante 1
 - **Nombre Completo:** Gregorio Canton Chacon Antonio
-- **Edad:** 18
-- **Correo electrónico:** 23308060610080_1@cetis61.edu.mx
-- **Especialidad:** Programación
-- **Institución:** CETis 61
 
- ![20250922_081536 (1)](https://github.com/user-attachments/assets/65e0086f-b532-49c2-826e-40c4782e621a)
+<img width="200" height="202" alt="integrante1" src="https://github.com/user-attachments/assets/f6a87c43-2190-47cb-bf01-ae8cf94b9d7e" />
 
  ### Integrante 2
 - **Nombre Completo:** Herrera Trejo Victor Daniel
-- **Edad:** 18
-- **Correo electrónico:** 23308060610149@cetis61.edu.mx
-- **Especialidad:** Programación
-- **Institución:** CETis 61
 
- ![IMG-20250922-WA0001 (1)](https://github.com/user-attachments/assets/3fd1b25d-e9eb-46da-abbf-5feb83e0bfdc)
-
+<img width="200" height="202" alt="integrante2" src="https://github.com/user-attachments/assets/e27750c8-92a3-4d30-9f5f-fdd2d3be4220" />
