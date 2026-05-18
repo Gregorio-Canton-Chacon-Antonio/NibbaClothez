@@ -6,12 +6,19 @@ from views.LoginView import LoginView
 from views.dashboardView import DashboardView
 from views.RegistroView import RegistroView
 from views.UserView import PerfilView
+from views.RecuperarView import RecuperarView
 
 
 def start(page: ft.Page):
     page.title = "Nibba Clothez"
-    page.window_width = 420
-    page.window_height = 700
+    page.window.width = 390
+    page.window.height = 844
+    page.window.min_width = 390
+    page.window.min_height = 844
+    page.window.max_width = 390
+    page.window.max_height = 844
+    page.window.resizable = False
+    page.update()
 
     auth_ctrl = AuthController()
     prenda_ctrl = PrendaController()
@@ -27,6 +34,8 @@ def start(page: ft.Page):
                 page.views.append(RegistroView(page, auth_ctrl))
             elif page.route == "/perfil":
                 page.views.append(PerfilView(page, auth_ctrl))
+            elif page.route == "/recuperar":
+                page.views.append(RecuperarView(page, auth_ctrl))
             page.update()
         except Exception:
             traceback.print_exc()
