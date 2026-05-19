@@ -28,13 +28,15 @@ def RecuperarView(page: ft.Page, auth_controller):
         if not email or not validar_email(email):
             notificar("Ingresa un correo válido")
             return
+        notificar("Enviando código...")
         ok, id_usuario, msg = auth_controller.solicitar_recuperacion(email)
+        print(f"[DEBUG] solicitar_recuperacion -> ok={ok}, id={id_usuario}, msg={msg}")
         if ok:
             estado["id_usuario"] = id_usuario
             estado["paso"] = 2
             construir_vista()
         else:
-            notificar(msg)
+            notificar(f"Error: {msg}")
 
     paso1 = ft.Column(
         tight=True, spacing=10,
