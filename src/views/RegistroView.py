@@ -51,7 +51,6 @@ def RegistroView(page: ft.Page, auth_controller):
     error_email = ft.Text("", size=11, color="#CC0000")
     error_password = ft.Text("", size=11, color="#CC0000")
 
-    # Indicadores de requisitos de contraseña
     def req_row(texto, cumple):
         return ft.Row(
             spacing=6,
