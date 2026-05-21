@@ -10,6 +10,46 @@ Además, el sistema permitirá mantener un control organizado de los productos p
 
 Finalmente, el proyecto busca ofrecer una alternativa práctica para la compra y venta de productos en línea, promoviendo una comunicación eficiente entre usuarios y una administración adecuada de la información dentro del sistema para que encuentres todo en un solo sitio.
 
+## 3. Login y Registro
+
+### Registro
+El proceso de registro permite a nuevos usuarios crear una cuenta en la plataforma. Para registrarse, el usuario debe proporcionar los siguientes datos:
+
+- **Nombre completo**
+- **Correo electrónico**
+- **Contraseña**
+
+Una vez el formulario esta lleno, el sistema valida que el correo no esté registrado anteriormente y que la contraseña cumpla con los requisitos mínimos de seguridad, al igual el correo electronico necesita cumplir los requisitos. Si todo es correcto, la cuenta es creada y el usuario puede iniciar sesión. una vez iniciada debe enviarte de nuevo a la pagina de inicio.
+
+### Login
+El inicio de sesión permite a los usuarios registrados acceder a su cuenta. El usuario debe ingresar:
+
+- **Correo electrónico**
+- **Contraseña**
+
+El sistema verifica que los datos sean correctos. Si los datos son válidos, el usuario es redirigido a la página principal de la tienda. En caso de error, se muestra un mensaje indicando que el correo o la contraseña son incorrectos. de igual manera aparece si la contraseña es valida.
+
+
+## 3. Módulo de Registro y Recuperación de Contraseñas
+
+### Registro
+El proceso de registro permite a nuevos usuarios crear una cuenta en la plataforma. Para completar el registro, el usuario debe ingresar los siguientes datos:
+
+- Nombre completo
+- Correo electrónico
+- Contraseña
+
+El sistema valida que el correo no esté registrado previamente y que la contraseña cumpla con los requisitos mínimos. Si todo es correcto, la cuenta es creada exitosamente.
+
+### Recuperación de Contraseña
+En caso de que el usuario olvide su contraseña, la plataforma ofrece un proceso de recuperación:
+
+1. El usuario ingresa su correo electrónico registrado.
+2. El sistema envía un enlace de recuperación al correo.
+3. El usuario accede al enlace y establece una nueva contraseña.
+4. Una vez confirmada, puede iniciar sesión con la nueva contraseña.
+
+
 
 ## 2. Integrantes
 
