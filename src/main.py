@@ -7,6 +7,7 @@ from views.dashboardView import DashboardView
 from views.RegistroView import RegistroView
 from views.UserView import PerfilView
 from views.RecuperarView import RecuperarView
+from views.vistaDeCasa import VistaDeCasa
 
 
 def start(page: ft.Page):
@@ -26,7 +27,9 @@ def start(page: ft.Page):
     def route_change(e):
         try:
             page.views.clear()
-            if page.route == "/":
+            if page.route == "/casa":
+                page.views.append(VistaDeCasa(page))
+            elif page.route == "/":
                 page.views.append(LoginView(page, auth_ctrl))
             elif page.route == "/dashboard":
                 page.views.append(DashboardView(page, prenda_ctrl))
@@ -54,10 +57,7 @@ def start(page: ft.Page):
     page.on_view_pop = view_pop
     page.on_error = on_error
 
-    if page.route == "/":
-        route_change(None)
-    else:
-        page.go("/")
+    page.go("/casa")
 
 
 def main():
