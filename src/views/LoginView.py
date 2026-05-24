@@ -123,6 +123,7 @@ def LoginView(page: ft.Page, auth_controller):
                         ),
                         ft.TextButton("¿Olvidaste tu contraseña?", style=ft.ButtonStyle(color="#666666"), on_click=lambda _: page.go("/recuperar")),
                         ft.TextButton("¿Sin cuenta? Regístrate", style=ft.ButtonStyle(color="#000000"), on_click=lambda _: page.go("/registro")),
+                        ft.TextButton("← Volver al inicio", style=ft.ButtonStyle(color="#888888"), on_click=lambda _: page.go("/casa")),
                     ],
                 ),
             )
