@@ -13,10 +13,10 @@ def VistaDeCasa(page: ft.Page):
                 bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
                 content=ft.Icon(ft.Icons.CHECKROOM_ROUNDED, size=18, color="#000000"),
             ),
-            ft.ElevatedButton(
+            ft.OutlinedButton(
                 "Iniciar sesión", height=30,
                 style=ft.ButtonStyle(
-                    bgcolor="#000000", color="#FFFFFF",
+                    side=ft.BorderSide(1, "#000000"), color="#000000",
                     shape=ft.RoundedRectangleBorder(radius=8),
                     text_style=ft.TextStyle(size=11),
                     padding=ft.padding.symmetric(horizontal=10),
