@@ -16,7 +16,7 @@ def RecuperarView(page: ft.Page, auth_controller):
     def validar_password(valor):
         return len(valor) >= 8 and len(valor) <= 30 and any(c.isupper() for c in valor) and any(c.islower() for c in valor)
 
-    # --- Paso 1: ingresar email ---
+
     email_field = ft.TextField(
         label="Correo registrado", border_radius=10, filled=True,
         bgcolor="#F5F5F5", border_color="#CCCCCC", focused_border_color="#000000",
@@ -54,7 +54,7 @@ def RecuperarView(page: ft.Page, auth_controller):
         ],
     )
 
-    # --- Paso 2: ingresar token ---
+
     token_field = ft.TextField(
         label="Código de 6 dígitos", border_radius=10, filled=True,
         bgcolor="#F5F5F5", border_color="#CCCCCC", focused_border_color="#000000",
@@ -91,7 +91,7 @@ def RecuperarView(page: ft.Page, auth_controller):
         ],
     )
 
-    # --- Paso 3: nueva contraseña ---
+
     def mostrar_nueva(e):
         nueva_field.password = not nueva_field.password
         nueva_field.update()
