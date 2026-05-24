@@ -186,6 +186,7 @@ def RegistroView(page: ft.Page, auth_controller):
                             on_click=crear_usuario,
                         ),
                         ft.TextButton("Ya tengo cuenta", style=ft.ButtonStyle(color="#000000"), on_click=lambda _: page.go("/")),
+                        ft.TextButton("← Volver al inicio", style=ft.ButtonStyle(color="#888888"), on_click=lambda _: page.go("/casa")),
                     ],
                 ),
             )
