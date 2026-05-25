@@ -3,11 +3,35 @@ import flet as ft
 
 def VistaDeCasa(page: ft.Page):
 
+    drawer_panel = ft.Container(
+        visible=False,
+        width=220,
+        bgcolor="#F8F8F8",
+        border=ft.border.only(right=ft.BorderSide(1, "#DDDDDD")),
+        expand_loose=True,
+        content=ft.Column(
+            spacing=0,
+            controls=[
+                ft.Container(height=16),
+            ],
+        ),
+    )
+
+    def toggle_drawer(_):
+        drawer_panel.visible = not drawer_panel.visible
+        page.update()
+
     navbar = ft.Row(
         alignment=ft.MainAxisAlignment.START,
         vertical_alignment=ft.CrossAxisAlignment.CENTER,
         spacing=6,
         controls=[
+            ft.Container(
+                width=32, height=32, border_radius=8,
+                bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
+                content=ft.Icon(ft.Icons.MENU_ROUNDED, size=18, color="#000000"),
+                on_click=toggle_drawer,
+            ),
             ft.Container(
                 width=32, height=32, border_radius=8,
                 bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
@@ -52,5 +76,23 @@ def VistaDeCasa(page: ft.Page):
         padding=ft.padding.symmetric(horizontal=16, vertical=16),
         controls=[
             navbar,
+            ft.TextField(
+                hint_text="Buscar...",
+                height=38,
+                border_radius=10,
+                filled=True,
+                bgcolor="#F0F0F0",
+                border_color="#DDDDDD",
+                focused_border_color="#000000",
+                hint_style=ft.TextStyle(color="#AAAAAA", size=13),
+                text_style=ft.TextStyle(color="#000000", size=13),
+                prefix_icon=ft.Icons.SEARCH_ROUNDED,
+                content_padding=ft.padding.symmetric(horizontal=10, vertical=6),
+            ),
+            ft.Row(
+                spacing=0,
+                expand=True,
+                controls=[drawer_panel],
+            ),
         ],
     )
