@@ -24,6 +24,11 @@ def start(page: ft.Page):
     auth_ctrl = AuthController()
     prenda_ctrl = PrendaController()
 
+    file_picker = ft.FilePicker()
+    page.services.append(file_picker)
+    page.file_picker = file_picker
+    page.update()
+
     def route_change(e):
         try:
             page.views.clear()

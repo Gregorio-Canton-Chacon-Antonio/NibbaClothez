@@ -84,7 +84,9 @@ def LoginView(page: ft.Page, auth_controller):
             usuario, msg = auth_controller.login(email_field.value, password_field.value)
             if usuario:
                 page.user_data = usuario
-                page.go("/dashboard")
+                destino = getattr(page, "redirect_after_login", "/casa")
+                page.redirect_after_login = None
+                page.go(destino)
             else:
                 notificar(msg)
         except Exception as error:

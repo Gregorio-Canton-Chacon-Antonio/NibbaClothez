@@ -21,23 +21,29 @@ def VistaDeCasa(page: ft.Page):
         drawer_panel.visible = not drawer_panel.visible
         page.update()
 
-    navbar = ft.Row(
-        alignment=ft.MainAxisAlignment.START,
-        vertical_alignment=ft.CrossAxisAlignment.CENTER,
-        spacing=6,
-        controls=[
+    sesion_activa = getattr(page, "user_data", None)
+
+    if sesion_activa:
+        botones_auth = [
             ft.Container(
                 width=32, height=32, border_radius=8,
                 bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
-                content=ft.Icon(ft.Icons.MENU_ROUNDED, size=18, color="#000000"),
-                on_click=toggle_drawer,
+                content=ft.Icon(ft.Icons.PERSON_ROUNDED, size=18, color="#000000"),
+                on_click=lambda _: page.go("/perfil"),
             ),
-            ft.Container(
-                width=32, height=32, border_radius=8,
-                bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
-                clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                content=ft.Image(src="Nibbaz.jpeg", fit="cover"),
+            ft.ElevatedButton(
+                "Vender", height=30,
+                style=ft.ButtonStyle(
+                    bgcolor="#000000", color="#FFFFFF",
+                    shape=ft.RoundedRectangleBorder(radius=8),
+                    text_style=ft.TextStyle(size=11),
+                    padding=ft.padding.symmetric(horizontal=10),
+                ),
+                on_click=lambda _: page.go("/dashboard"),
             ),
+        ]
+    else:
+        botones_auth = [
             ft.OutlinedButton(
                 "Iniciar sesión", height=30,
                 style=ft.ButtonStyle(
@@ -66,8 +72,33 @@ def VistaDeCasa(page: ft.Page):
                     text_style=ft.TextStyle(size=11),
                     padding=ft.padding.symmetric(horizontal=10),
                 ),
-                on_click=lambda _: page.go("/dashboard") if getattr(page, "user_data", None) else page.go("/registro"),
+                on_click=lambda _: [setattr(page, "redirect_after_login", "/dashboard"), page.go("/")][1],
             ),
+        ]
+
+    navbar = ft.Row(
+        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        spacing=6,
+        controls=[
+            ft.Row(
+                spacing=6,
+                controls=[
+                    ft.Container(
+                        width=32, height=32, border_radius=8,
+                        bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
+                        content=ft.Icon(ft.Icons.MENU_ROUNDED, size=18, color="#000000"),
+                        on_click=toggle_drawer,
+                    ),
+                    ft.Container(
+                        width=32, height=32, border_radius=8,
+                        bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
+                        clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                        content=ft.Image(src="Nibbaz.jpeg", fit="cover"),
+                    ),
+                ],
+            ),
+            ft.Row(spacing=6, controls=botones_auth),
         ],
     )
 

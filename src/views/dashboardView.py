@@ -1,4 +1,6 @@
 import flet as ft
+import os
+import shutil
 
 CONDICION_LABELS = {
     "nuevo": "Nuevo",
@@ -75,6 +77,43 @@ def DashboardView(page, prenda_controller):
 
     cargar_prendas()
 
+    foto_path = [""]
+
+    preview_imagen = ft.Container(
+        width=358, height=180, border_radius=10,
+        bgcolor="#F0F0F0", border=ft.border.all(1, "#CCCCCC"),
+        content=ft.Column(
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            controls=[
+                ft.Icon(ft.Icons.ADD_PHOTO_ALTERNATE_ROUNDED, size=36, color="#AAAAAA"),
+                ft.Text("Toca para agregar foto", size=12, color="#AAAAAA"),
+            ],
+        ),
+    )
+
+    file_picker = page.file_picker
+
+    async def abrir_picker(_):
+        files = await file_picker.pick_files(
+            allowed_extensions=["jpg", "jpeg", "png", "webp"], allow_multiple=False
+        )
+        if not files:
+            return
+        src = files[0].path
+        if not src:
+            return
+        assets_dir = os.path.join(os.path.dirname(__file__), "..", "..", "img", "prendas")
+        os.makedirs(assets_dir, exist_ok=True)
+        nombre = f"{os.urandom(8).hex()}{os.path.splitext(src)[1]}"
+        dst = os.path.join(assets_dir, nombre)
+        shutil.copy2(src, dst)
+        foto_path[0] = f"prendas/{nombre}"
+        preview_imagen.content = ft.Image(src=foto_path[0], fit="cover", width=358, height=180)
+        preview_imagen.update()
+
+    preview_imagen.on_click = abrir_picker
+
     def campo(label, expand=False, width=None, keyboard_type=None):
         return ft.TextField(
             label=label, expand=expand, width=width, border_radius=10, filled=True,
@@ -104,11 +143,21 @@ def DashboardView(page, prenda_controller):
         exito, mensaje = prenda_controller.guardar_nueva(
             usuario_actual["id_usuario"], input_titulo.value, input_precio.value,
             input_talla.value, select_condicion.value,
-            input_marca.value or "Sin marca", input_descripcion.value or ""
+            input_marca.value or "Sin marca", input_descripcion.value or "",
+            foto_path[0],
         )
         if exito:
             input_titulo.value = input_precio.value = input_talla.value = input_marca.value = input_descripcion.value = ""
             select_condicion.value = "nuevo"
+            foto_path[0] = ""
+            preview_imagen.content = ft.Column(
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                controls=[
+                    ft.Icon(ft.Icons.ADD_PHOTO_ALTERNATE_ROUNDED, size=36, color="#AAAAAA"),
+                    ft.Text("Toca para agregar foto", size=12, color="#AAAAAA"),
+                ],
+            )
             cargar_prendas()
         else:
             notificar(mensaje)
@@ -122,12 +171,12 @@ def DashboardView(page, prenda_controller):
         content=ft.Row(
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             controls=[
-                ft.Text(f"Hola, {nombre_usuario} 👋", size=18, weight="bold", color="#000000"),
+                ft.Text(f"Que vamos a vender hoy? ", size=18, weight="bold", color="#000000"),
                 ft.Row(
                     spacing=4,
                     controls=[
-                        ft.IconButton(ft.Icons.PERSON_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/perfil")),
-                        ft.IconButton(ft.Icons.LOGOUT_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/")),
+                ft.IconButton(ft.Icons.HOME_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/casa")),
+                ft.IconButton(ft.Icons.PERSON_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/perfil")),
                     ],
                 ),
             ],
@@ -142,6 +191,7 @@ def DashboardView(page, prenda_controller):
             spacing=10,
             controls=[
                 ft.Text("Nueva prenda", size=14, color="#000000", weight="bold"),
+                preview_imagen,
                 ft.Row(spacing=8, controls=[input_titulo]),
                 ft.Row(spacing=8, controls=[input_precio, input_talla, select_condicion]),
                 ft.Row(spacing=8, controls=[input_marca]),
