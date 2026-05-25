@@ -84,7 +84,7 @@ def LoginView(page: ft.Page, auth_controller):
             usuario, msg = auth_controller.login(email_field.value, password_field.value)
             if usuario:
                 page.user_data = usuario
-                destino = getattr(page, "redirect_after_login", "/casa")
+                destino = getattr(page, "redirect_after_login", None) or "/casa"
                 page.redirect_after_login = None
                 page.go(destino)
             else:

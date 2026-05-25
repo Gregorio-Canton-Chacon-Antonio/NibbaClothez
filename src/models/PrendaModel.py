@@ -22,7 +22,22 @@ class PrendaModel:
         conn.commit()
         conn.close()
 
-    def eliminar(self, id_prenda):
+    def actualizar(self, id_prenda, titulo, precio, talla, condicion, marca, descripcion, foto=None):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        if foto is not None:
+            cursor.execute(
+                "UPDATE prenda SET titulo=%s, precio=%s, talla=%s, condicion=%s, marca=%s, descripcion=%s, foto=%s WHERE id_prenda=%s",
+                (titulo, precio, talla, condicion, marca, descripcion, foto, id_prenda)
+            )
+        else:
+            cursor.execute(
+                "UPDATE prenda SET titulo=%s, precio=%s, talla=%s, condicion=%s, marca=%s, descripcion=%s WHERE id_prenda=%s",
+                (titulo, precio, talla, condicion, marca, descripcion, id_prenda)
+            )
+        conn.commit()
+        conn.close()
+
         conn = self.db.get_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM prenda WHERE id_prenda = %s", (id_prenda,))
