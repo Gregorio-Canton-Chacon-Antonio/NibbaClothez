@@ -105,9 +105,10 @@ def LoginView(page: ft.Page, auth_controller):
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     controls=[
                         ft.Container(
-                            width=64, height=64, border_radius=32,
+                            width=64, height=64, border_radius=0,
                             bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
-                            content=ft.Icon(ft.Icons.CHECKROOM_ROUNDED, size=36, color="#000000"),
+                            clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                            content=ft.Image(src="Nibbaz.jpeg", fit="cover"),
                         ),
                         ft.Text("Nibba Clothez", size=24, weight="bold", color="#000000"),
                         ft.Text("Inicia sesión", size=13, color="#888888"),

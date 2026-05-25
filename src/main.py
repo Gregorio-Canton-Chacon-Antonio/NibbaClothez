@@ -61,7 +61,9 @@ def start(page: ft.Page):
 
 
 def main():
-    ft.app(target=start)
+    import os
+    assets = os.path.join(os.path.dirname(__file__), "..", "img")
+    ft.app(target=start, assets_dir=assets)
 
 
 if __name__ == "__main__":

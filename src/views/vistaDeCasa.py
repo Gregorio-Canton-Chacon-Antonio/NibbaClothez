@@ -35,7 +35,8 @@ def VistaDeCasa(page: ft.Page):
             ft.Container(
                 width=32, height=32, border_radius=8,
                 bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
-                content=ft.Icon(ft.Icons.CHECKROOM_ROUNDED, size=18, color="#000000"),
+                clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                content=ft.Image(src="Nibbaz.jpeg", fit="cover"),
             ),
             ft.OutlinedButton(
                 "Iniciar sesión", height=30,
