@@ -1,5 +1,5 @@
 # Documentación de aplicación
-##  Objetivo
+## 1 Objetivo
 El propósito del proyecto es desarrollar una tienda virtual, donde los usuarios puedan comprar y vender productos de manera sencilla y rápida. La aplicación contará con funciones que permitan una gran comodidad en la búsqueda o venta, enfocándose en ofrecer una experiencia simple y fácil de usar pero aún así buena y confiable.
 
 El alcance del proyecto incluye el registro de usuarios, publicación de productos, búsqueda por categorías, visualización de artículos y comunicación  entre compradores y vendedores. Será para todo tipo de usuarios sin restricciones en la ropa y con libertad en las descripciones y precios, todo lo que puede abarcar un estilo tendremos un espacio para todos, desde ropa deportiva hasta elegante buscamos ser una tienda con buena imagen donde cualquier tipo de persona se interese en comprar, que no parezca un sitio barato y de remate.
@@ -10,7 +10,7 @@ Además, el sistema permitirá mantener un control organizado de los productos p
 
 Finalmente, el proyecto busca ofrecer una alternativa práctica para la compra y venta de productos en línea, promoviendo una comunicación eficiente entre usuarios y una administración adecuada de la información dentro del sistema para que encuentres todo en un solo sitio.
 
-### Registro
+### 2 Registro
 El proceso de registro permite a nuevos usuarios crear una cuenta en la plataforma. Para registrarse, el usuario debe proporcionar los siguientes datos:
 
 - **Nombre completo**
@@ -19,22 +19,13 @@ El proceso de registro permite a nuevos usuarios crear una cuenta en la platafor
 
 Una vez el formulario esta lleno, el sistema valida que el correo no esté registrado anteriormente y que la contraseña cumpla con los requisitos mínimos de seguridad, al igual el correo electronico necesita cumplir los requisitos. Si todo es correcto, la cuenta es creada y el usuario puede iniciar sesión. una vez iniciada debe enviarte de nuevo a la pagina de inicio.
 
-### Login
+### 3 Login
 El inicio de sesión permite a los usuarios registrados acceder a su cuenta. El usuario debe ingresar:
 
 - **Correo electrónico**
 - **Contraseña**
 
 El sistema verifica que los datos sean correctos. Si los datos son válidos, el usuario es redirigido a la página principal de la tienda. En caso de error, se muestra un mensaje indicando que el correo o la contraseña son incorrectos. de igual manera aparece si la contraseña es valida.
-
-### Registro
-El proceso de registro permite a nuevos usuarios crear una cuenta en la plataforma. Para completar el registro, el usuario debe ingresar los siguientes datos:
-
-- Nombre completo
-- Correo electrónico
-- Contraseña
-
-El sistema valida que el correo no esté registrado previamente y que la contraseña cumpla con los requisitos mínimos. Si todo es correcto, la cuenta es creada exitosamente.
 
 ### Recuperación de Contraseña
 En caso de que el usuario olvide su contraseña, la plataforma ofrece un proceso de recuperación:
