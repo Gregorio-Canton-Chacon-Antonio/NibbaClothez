@@ -27,7 +27,7 @@ El inicio de sesión permite a los usuarios registrados acceder a su cuenta. El 
 
 El sistema verifica que los datos sean correctos. Si los datos son válidos, el usuario es redirigido a la página principal de la tienda. En caso de error, se muestra un mensaje indicando que el correo o la contraseña son incorrectos. de igual manera aparece si la contraseña es valida.
 
-### Recuperación de Contraseña
+### 4 Recuperación de Contraseña
 En caso de que el usuario olvide su contraseña, la plataforma ofrece un proceso de recuperación:
 
 1. El usuario ingresa su correo electrónico registrado.
