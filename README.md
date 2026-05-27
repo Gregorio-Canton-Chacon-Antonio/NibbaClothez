@@ -10,7 +10,7 @@ Además, el sistema permitirá mantener un control organizado de los productos p
 
 Finalmente, el proyecto busca ofrecer una alternativa práctica para la compra y venta de productos en línea, promoviendo una comunicación eficiente entre usuarios y una administración adecuada de la información dentro del sistema para que encuentres todo en un solo sitio.
 
-## 3. Login y Registro
+## 2. Login y Registro
 
 ### Registro
 El proceso de registro permite a nuevos usuarios crear una cuenta en la plataforma. Para registrarse, el usuario debe proporcionar los siguientes datos:
@@ -51,7 +51,7 @@ En caso de que el usuario olvide su contraseña, la plataforma ofrece un proceso
 
 
 
-## 2. Integrantes
+## 4. Integrantes
 
 ### Integrante 1
 - **Nombre Completo:** Gregorio Canton Chacon Antonio
