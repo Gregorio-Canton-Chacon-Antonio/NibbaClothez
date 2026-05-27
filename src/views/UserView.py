@@ -69,6 +69,7 @@ def PerfilView(page, auth_controller):
     return ft.View(
         route="/perfil",
         bgcolor="#F7F7F7",
+        scroll=ft.ScrollMode.AUTO,
         controls=[
             encabezado,
             ft.Container(

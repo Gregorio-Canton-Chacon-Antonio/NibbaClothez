@@ -6,8 +6,8 @@ def RecuperarView(page: ft.Page, auth_controller):
     estado = {"id_usuario": None, "paso": 1}
 
     def notificar(texto):
-        snackbar = ft.SnackBar(ft.Text(texto, color=ft.Colors.WHITE), bgcolor="#333333", open=True)
-        page.overlay.append(snackbar)
+        page.snack_bar = ft.SnackBar(ft.Text(texto, color=ft.Colors.WHITE), bgcolor="#333333")
+        page.snack_bar.open = True
         page.update()
 
     def validar_email(valor):
@@ -156,11 +156,11 @@ def RecuperarView(page: ft.Page, auth_controller):
     return ft.View(
         route="/recuperar",
         bgcolor="#FFFFFF",
-        vertical_alignment=ft.MainAxisAlignment.CENTER,
+        scroll=ft.ScrollMode.AUTO,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             ft.Container(
-                width=360, padding=35, border_radius=16,
+                padding=ft.padding.only(top=50, left=25, right=25, bottom=60),
                 bgcolor="#FFFFFF", border=ft.border.all(1, "#E0E0E0"),
                 shadow=ft.BoxShadow(spread_radius=0, blur_radius=20, color=ft.Colors.with_opacity(0.1, "#000000"), offset=ft.Offset(0, 4)),
                 content=ft.Column(

@@ -38,6 +38,7 @@ class PrendaModel:
         conn.commit()
         conn.close()
 
+    def eliminar(self, id_prenda):
         conn = self.db.get_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM prenda WHERE id_prenda = %s", (id_prenda,))

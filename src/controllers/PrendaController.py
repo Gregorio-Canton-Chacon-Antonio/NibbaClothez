@@ -18,7 +18,7 @@ class PrendaController:
         except ValueError:
             return False, "El precio debe ser un número válido"
 
-    def editar_prenda(self, id_prenda, titulo, precio, talla, condicion, marca, descripcion, foto=None):
+    def editar_prenda(self, id_usuario, id_prenda, titulo, precio, talla, condicion, marca, descripcion, foto=None):
         if not titulo:
             return False, "El título es obligatorio"
         try:
@@ -27,7 +27,7 @@ class PrendaController:
         except ValueError:
             return False, "El precio debe ser un número válido"
 
-    def eliminar_prenda(self, id_prenda):
+    def eliminar_prenda(self, id_usuario, id_prenda):
         try:
             self.model.eliminar(id_prenda)
             return True, "Prenda eliminada"

@@ -16,12 +16,12 @@ def DashboardView(page, prenda_controller):
     lista_prendas = ft.Column(spacing=10)
 
     def notificar(texto):
-        notif = ft.SnackBar(ft.Text(texto, color=ft.Colors.WHITE), bgcolor="#333333", open=True)
-        page.overlay.append(notif)
+        page.snack_bar = ft.SnackBar(ft.Text(texto, color=ft.Colors.WHITE), bgcolor="#333333")
+        page.snack_bar.open = True
         page.update()
 
     def borrar(id_prenda):
-        exito, mensaje = prenda_controller.eliminar_prenda(id_prenda)
+        exito, mensaje = prenda_controller.eliminar_prenda(usuario_actual["id_usuario"], id_prenda)
         if exito:
             cargar_prendas()
         else:
@@ -51,7 +51,6 @@ def DashboardView(page, prenda_controller):
             )
             if not files or not files[0].path:
                 return
-            import base64
             with open(files[0].path, "rb") as f:
                 foto_edit[0] = base64.b64encode(f.read()).decode()
             preview_edit.content = ft.Image(src=foto_edit[0], fit="cover", width=320, height=160)
@@ -126,7 +125,7 @@ def DashboardView(page, prenda_controller):
                 return
             foto_nueva = foto_edit[0] if foto_edit[0] != prenda.get("foto", "") else None
             exito, msg = prenda_controller.editar_prenda(
-                prenda["id_prenda"], e_titulo.value, e_precio.value,
+                usuario_actual["id_usuario"], prenda["id_prenda"], e_titulo.value, e_precio.value,
                 e_talla.value, e_condicion.value,
                 e_marca.value or "Sin marca", e_descripcion.value or "",
                 foto_nueva,
@@ -203,7 +202,7 @@ def DashboardView(page, prenda_controller):
     foto_path = [""]
 
     preview_imagen = ft.Container(
-        width=358, height=180, border_radius=10,
+        expand=True, height=180, border_radius=10,
         bgcolor="#F0F0F0", border=ft.border.all(1, "#CCCCCC"),
         content=ft.Column(
             alignment=ft.MainAxisAlignment.CENTER,
@@ -229,7 +228,7 @@ def DashboardView(page, prenda_controller):
         with open(src, "rb") as f:
             foto_path[0] = base64.b64encode(f.read()).decode()
         preview_imagen.content = ft.Image(src=foto_path[0], fit="cover", width=358, height=180)
-        preview_imagen.update()
+        page.update()
 
     preview_imagen.on_click = abrir_picker
 
@@ -243,12 +242,12 @@ def DashboardView(page, prenda_controller):
 
     input_titulo = campo("Título", expand=True)
     input_precio = campo("Precio", width=100, keyboard_type=ft.KeyboardType.NUMBER)
-    input_talla = campo("Talla", width=80)
+    input_talla = campo("Talla", expand=True)
     input_marca = campo("Marca", expand=True)
     input_descripcion = campo("Descripción", expand=True)
 
     select_condicion = ft.Dropdown(
-        label="Condición", width=160, border_radius=10,
+        label="Condición", expand=True, border_radius=10,
         bgcolor="#F5F5F5", border_color="#CCCCCC", focused_border_color="#000000",
         label_style=ft.TextStyle(color="#666666"), color="#000000",
         options=[ft.dropdown.Option(k, text=v) for k, v in CONDICION_LABELS.items()],
@@ -339,7 +338,7 @@ def DashboardView(page, prenda_controller):
         controls=[
             barra_superior,
             ft.Container(
-                padding=16,
+                padding=ft.padding.only(top=16, left=16, right=16, bottom=100),
                 content=ft.Column(
                     spacing=12,
                     controls=[

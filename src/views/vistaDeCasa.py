@@ -105,6 +105,7 @@ def VistaDeCasa(page: ft.Page):
     return ft.View(
         route="/casa",
         bgcolor="#FFFFFF",
+        scroll=ft.ScrollMode.AUTO,
         padding=ft.padding.symmetric(horizontal=16, vertical=16),
         controls=[
             navbar,

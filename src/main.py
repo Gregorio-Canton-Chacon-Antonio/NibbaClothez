@@ -10,15 +10,15 @@ from views.RecuperarView import RecuperarView
 from views.vistaDeCasa import VistaDeCasa
 
 
-def start(page: ft.Page):
+async def start(page: ft.Page):
     page.title = "Nibba Clothez"
-    page.window.width = 390
-    page.window.height = 844
-    page.window.min_width = 390
-    page.window.min_height = 844
-    page.window.max_width = 390
-    page.window.max_height = 844
-    page.window.resizable = False
+    page.window.width = 430
+    page.window.height = 720
+    page.window.min_width = 430
+    page.window.min_height = 600
+    page.window.resizable = True
+    page.window.title_bar_hidden = False
+    await page.window.center()
     page.update()
 
     auth_ctrl = AuthController()
@@ -56,7 +56,14 @@ def start(page: ft.Page):
 
     def on_error(e):
         traceback.print_exc()
-        print("PAGE ERROR:", e.data)
+        # Mostramos el error en un SnackBar para que sea visible al usuario
+        page.snack_bar = ft.SnackBar(
+            content=ft.Text(f"Error: {e.data}", color=ft.Colors.WHITE),
+            bgcolor=ft.Colors.RED_700,
+            action="Cerrar"
+        )
+        page.snack_bar.open = True
+        page.update()
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
