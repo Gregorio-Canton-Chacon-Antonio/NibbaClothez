@@ -15,8 +15,9 @@ class AuthController:
     def registrar_Usuario(self, nombre, email, contrasena):
         try:
             nuevo = UsuarioShema(nombre=nombre, email=email, password=contrasena)
-            success = self.model.registrar(nuevo)
-            return success, "Usuario creado correctamente"
+            if self.model.registrar(nuevo):
+                return True, "Usuario creado correctamente"
+            return False, "El correo ya está registrado o hubo un error en el servidor"
         except ValidationError as e:
             return False, e.errors()[0]['msg']
         except Exception as e:

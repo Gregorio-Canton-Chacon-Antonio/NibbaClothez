@@ -199,17 +199,60 @@ def DashboardView(page, prenda_controller):
 
     cargar_prendas()
 
-    foto_path = [""]
+    fotos_lista = []
+    texto_conteo = ft.Text("Fotos · 0 / 5", size=14, weight="bold", color="#000000")
+    contenedor_fotos = ft.Row(spacing=10, scroll=ft.ScrollMode.AUTO)
+
+    def ver_foto(img_base64):
+        def cerrar_dialogo(_):
+            dialogo.open = False
+            page.update()
+        dialogo = ft.AlertDialog(
+            content=ft.Image(src=img_base64, fit="contain", border_radius=10),
+            actions=[ft.TextButton("Cerrar", on_click=cerrar_dialogo)]
+        )
+        page.overlay.append(dialogo)
+        dialogo.open = True
+        page.update()
+
+    def eliminar_foto(indice):
+        fotos_lista.pop(indice)
+        actualizar_galeria()
+
+    def actualizar_galeria():
+        contenedor_fotos.controls.clear()
+        if len(fotos_lista) < 5:
+            contenedor_fotos.controls.append(preview_imagen)
+        
+        for i, f_base64 in enumerate(fotos_lista):
+            contenedor_fotos.controls.append(
+                ft.Stack([
+                    ft.Container(
+                        width=120, height=120, border_radius=10,
+                        content=ft.Image(src=f_base64, fit="cover", width=120, height=120)
+                    ),
+                    ft.IconButton(
+                        ft.Icons.EDIT_ROUNDED, icon_color="white",
+                        bgcolor=ft.Colors.with_opacity(0.4, "black"),
+                        left=-5, top=-5, icon_size=16,
+                        on_click=lambda _, img=f_base64: ver_foto(img)
+                    ),
+                    ft.IconButton(ft.Icons.CANCEL, icon_color="red", right=-5, top=-5, 
+                                  on_click=lambda _, idx=i: eliminar_foto(idx))
+                ])
+            )
+        texto_conteo.value = f"Fotos · {len(fotos_lista)} / 5"
+        page.update()
 
     preview_imagen = ft.Container(
-        expand=True, height=180, border_radius=10,
+        width=120, height=120, border_radius=10,
         bgcolor="#F0F0F0", border=ft.border.all(1, "#CCCCCC"),
         content=ft.Column(
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             controls=[
-                ft.Icon(ft.Icons.ADD_PHOTO_ALTERNATE_ROUNDED, size=36, color="#AAAAAA"),
-                ft.Text("Toca para agregar foto", size=12, color="#AAAAAA"),
+                ft.Icon(ft.Icons.CAMERA_ALT_ROUNDED, size=30, color="#555555"),
+                ft.Text("Agregar fotos", size=10, color="#555555", weight="bold"),
             ],
         ),
     )
@@ -217,20 +260,26 @@ def DashboardView(page, prenda_controller):
     file_picker = page.file_picker
 
     async def abrir_picker(_):
+        restantes = 5 - len(fotos_lista)
+        if restantes <= 0:
+            notificar("Límite de 5 fotos alcanzado")
+            return
+            
         files = await file_picker.pick_files(
-            allowed_extensions=["jpg", "jpeg", "png", "webp"], allow_multiple=False
+            allowed_extensions=["jpg", "jpeg", "png", "webp"], allow_multiple=True
         )
         if not files:
             return
-        src = files[0].path
-        if not src:
-            return
-        with open(src, "rb") as f:
-            foto_path[0] = base64.b64encode(f.read()).decode()
-        preview_imagen.content = ft.Image(src=foto_path[0], fit="cover", width=358, height=180)
-        page.update()
+            
+        for f_obj in files[:restantes]:
+            if f_obj.path:
+                with open(f_obj.path, "rb") as f:
+                    fotos_lista.append(base64.b64encode(f.read()).decode())
+        
+        actualizar_galeria()
 
     preview_imagen.on_click = abrir_picker
+    actualizar_galeria()
 
     def campo(label, expand=False, width=None, keyboard_type=None):
         return ft.TextField(
@@ -250,7 +299,7 @@ def DashboardView(page, prenda_controller):
         label="Condición", expand=True, border_radius=10,
         bgcolor="#F5F5F5", border_color="#CCCCCC", focused_border_color="#000000",
         label_style=ft.TextStyle(color="#666666"), color="#000000",
-        options=[ft.dropdown.Option(k, text=v) for k, v in CONDICION_LABELS.items()],
+        options=[ft.dropdown.Option(k, text=v) for k, v in CONDICION_LABELS.items()] + [ft.dropdown.Option("usado_buen_estado", "Usado")],
         value="nuevo",
     )
 
@@ -258,24 +307,20 @@ def DashboardView(page, prenda_controller):
         if not (usuario_actual and input_titulo.value and input_precio.value and input_talla.value):
             notificar("Título, precio y talla son obligatorios")
             return
+        
+        foto_principal = fotos_lista[0] if fotos_lista else ""
+        
         exito, mensaje = prenda_controller.guardar_nueva(
             usuario_actual["id_usuario"], input_titulo.value, input_precio.value,
             input_talla.value, select_condicion.value,
             input_marca.value or "Sin marca", input_descripcion.value or "",
-            foto_path[0],
+            foto_principal,
         )
         if exito:
             input_titulo.value = input_precio.value = input_talla.value = input_marca.value = input_descripcion.value = ""
             select_condicion.value = "nuevo"
-            foto_path[0] = ""
-            preview_imagen.content = ft.Column(
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                controls=[
-                    ft.Icon(ft.Icons.ADD_PHOTO_ALTERNATE_ROUNDED, size=36, color="#AAAAAA"),
-                    ft.Text("Toca para agregar foto", size=12, color="#AAAAAA"),
-                ],
-            )
+            fotos_lista.clear()
+            actualizar_galeria()
             cargar_prendas()
         else:
             notificar(mensaje)
@@ -289,64 +334,57 @@ def DashboardView(page, prenda_controller):
         content=ft.Row(
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             controls=[
-                ft.Text(f"Que vamos a vender hoy? ", size=18, weight="bold", color="#000000"),
-                ft.Row(
-                    spacing=4,
-                    controls=[
-                ft.IconButton(ft.Icons.HOME_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/casa")),
-                ft.IconButton(ft.Icons.PERSON_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/perfil")),
-                    ],
-                ),
+                ft.IconButton(ft.Icons.CLOSE_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/casa")),
+                ft.Text("Nueva publicación", size=16, weight="bold", color="#000000", expand=True, text_align="center"),
+                ft.TextButton("Publicar", style=ft.ButtonStyle(color="#1877F2"), on_click=nueva_prenda),
             ],
         ),
     )
 
-    formulario_prenda = ft.Container(
-        padding=16, border_radius=12, bgcolor="#FFFFFF",
-        border=ft.border.all(1, "#E0E0E0"),
-        shadow=ft.BoxShadow(spread_radius=0, blur_radius=8, color=ft.Colors.with_opacity(0.08, "#000000"), offset=ft.Offset(0, 2)),
+    seccion_fotos = ft.Container(
+        padding=ft.padding.symmetric(horizontal=16, vertical=20),
         content=ft.Column(
             spacing=10,
             controls=[
-                ft.Text("Nueva prenda", size=14, color="#000000", weight="bold"),
-                preview_imagen,
-                ft.Row(spacing=8, controls=[input_titulo]),
-                ft.Row(spacing=8, controls=[input_precio, input_talla, select_condicion]),
-                ft.Row(spacing=8, controls=[input_marca]),
-                ft.Row(spacing=8, controls=[input_descripcion]),
-                ft.Row(
-                    alignment=ft.MainAxisAlignment.END,
-                    controls=[
-                        ft.ElevatedButton(
-                            "Agregar", height=40,
-                            style=ft.ButtonStyle(
-                                bgcolor="#000000", color="#FFFFFF",
-                                shape=ft.RoundedRectangleBorder(radius=10),
-                            ),
-                            on_click=nueva_prenda,
-                        ),
-                    ],
-                ),
-            ],
-        ),
+                texto_conteo,
+                contenedor_fotos,
+                ft.Text("Las fotos ayudan a que los compradores vean el estado del artículo.", size=12, color="#666666"),
+            ]
+        )
+    )
+
+    formulario_campos = ft.Container(
+        padding=ft.padding.symmetric(horizontal=16),
+        content=ft.Column(
+            spacing=15,
+            controls=[
+                input_titulo,
+                input_precio,
+                ft.Row(spacing=10, controls=[select_condicion, input_talla]),
+                input_marca,
+                input_descripcion,
+            ]
+        )
     )
 
     return ft.View(
         route="/dashboard",
-        bgcolor="#F7F7F7",
+        bgcolor="#FFFFFF",
         scroll=ft.ScrollMode.AUTO,
         controls=[
             barra_superior,
+            seccion_fotos,
+            ft.Divider(height=1, color="#E0E0E0"),
+            ft.Container(height=10),
+            formulario_campos,
+            ft.Container(height=20),
+            ft.Divider(height=1, color="#E0E0E0"),
             ft.Container(
-                padding=ft.padding.only(top=16, left=16, right=16, bottom=100),
-                content=ft.Column(
-                    spacing=12,
-                    controls=[
-                        formulario_prenda,
-                        ft.Text("Mis prendas", size=15, weight="bold", color="#000000"),
-                        lista_prendas,
-                    ],
-                ),
+                padding=16,
+                content=ft.Column([
+                    ft.Text("Mis prendas", size=16, weight="bold", color="#000000"),
+                    lista_prendas,
+                ])
             ),
         ],
     )

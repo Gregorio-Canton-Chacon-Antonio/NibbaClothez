@@ -14,11 +14,11 @@ def RegistroView(page: ft.Page, auth_controller):
         page.update()
 
     def validar_email(valor):
-        return bool(re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", valor)) and len(valor) <= 30
+        return bool(re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", valor)) and len(valor) <= 150
 
     def validar_password(valor):
         return (
-            8 <= len(valor) <= 30
+            8 <= len(valor) <= 100
             and any(c.isupper() for c in valor)
             and any(c.islower() for c in valor)
             and any(c.isdigit() for c in valor)
@@ -36,14 +36,14 @@ def RegistroView(page: ft.Page, auth_controller):
         bgcolor="#F5F5F5", border_color="#CCCCCC",
         focused_border_color="#000000",
         label_style=ft.TextStyle(color="#666666"), color="#000000",
-        max_length=30,
+        max_length=150,
     )
     password_input = ft.TextField(
         label="Contraseña", password=True, border_radius=10, filled=True,
         bgcolor="#F5F5F5", border_color="#CCCCCC",
         focused_border_color="#000000",
         label_style=ft.TextStyle(color="#666666"), color="#000000",
-        max_length=30,
+        max_length=100,
         suffix=ft.IconButton(icon=ft.Icons.VISIBILITY_OUTLINED, icon_color="#666666", on_click=toggle_pass),
     )
 

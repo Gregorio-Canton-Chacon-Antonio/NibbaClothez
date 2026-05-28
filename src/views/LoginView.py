@@ -14,24 +14,24 @@ def LoginView(page: ft.Page, auth_controller):
         page.update()
 
     def validar_email(valor):
-        return bool(re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", valor)) and len(valor) <= 30
+        return bool(re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", valor)) and len(valor) <= 150
 
     def validar_password(valor):
-        return len(valor) >= 8 and len(valor) <= 30 and any(c.isupper() for c in valor) and any(c.islower() for c in valor)
+        return len(valor) >= 4
 
     email_field = ft.TextField(
         label="Correo", border_radius=10, filled=True,
         bgcolor="#F5F5F5", border_color="#CCCCCC",
         focused_border_color="#000000",
         label_style=ft.TextStyle(color="#666666"), color="#000000",
-        max_length=30,
+        max_length=150,
     )
     password_field = ft.TextField(
         label="Contraseña", password=True, border_radius=10, filled=True,
         bgcolor="#F5F5F5", border_color="#CCCCCC",
         focused_border_color="#000000",
         label_style=ft.TextStyle(color="#666666"), color="#000000",
-        max_length=30,
+        max_length=100,
         suffix=ft.IconButton(icon=ft.Icons.VISIBILITY_OUTLINED, icon_color="#666666", on_click=mostrar_password),
     )
 
@@ -40,8 +40,8 @@ def LoginView(page: ft.Page, auth_controller):
 
     def on_email_change(e):
         v = email_field.value
-        if v and len(v) > 30:
-            error_email.value = "El correo no puede superar 30 caracteres"
+        if v and len(v) > 150:
+            error_email.value = "El correo es demasiado largo"
             email_field.border_color = "#CC0000"
         elif v and not validar_email(v):
             error_email.value = "Ingresa un correo válido (ejemplo@dominio.com)"
@@ -54,11 +54,8 @@ def LoginView(page: ft.Page, auth_controller):
 
     def on_password_change(e):
         v = password_field.value
-        if v and len(v) > 30:
-            error_password.value = "La contraseña no puede superar 30 caracteres"
-            password_field.border_color = "#CC0000"
-        elif v and not validar_password(v):
-            error_password.value = "Mínimo 8 caracteres, una mayúscula y una minúscula"
+        if v and not validar_password(v):
+            error_password.value = "La contraseña es demasiado corta"
             password_field.border_color = "#CC0000"
         else:
             error_password.value = ""
