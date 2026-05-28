@@ -3,18 +3,24 @@ import flet as ft
 
 def VistaDeCasa(page: ft.Page):
 
+    categorias = ["Todos", "Ropa deportiva", "Ropa casual", "Ropa elegante", "Accesorios", "Calzado"]
+
+    items_menu = [ft.Text("Categorías", size=13, weight="bold", color="#000000"), ft.Divider(height=8, color="#DDDDDD")]
+    for cat in categorias:
+        items_menu.append(ft.Container(
+            padding=ft.padding.symmetric(horizontal=8, vertical=10),
+            border_radius=8,
+            ink=True,
+            content=ft.Text(cat, size=13, color="#222222"),
+        ))
+
     drawer_panel = ft.Container(
         visible=False,
         width=220,
         bgcolor="#F8F8F8",
         border=ft.border.only(right=ft.BorderSide(1, "#DDDDDD")),
-        expand_loose=True,
-        content=ft.Column(
-            spacing=0,
-            controls=[
-                ft.Container(height=16),
-            ],
-        ),
+        padding=ft.padding.symmetric(horizontal=12, vertical=16),
+        content=ft.Column(spacing=4, controls=items_menu),
     )
 
     def toggle_drawer(_):
@@ -122,10 +128,6 @@ def VistaDeCasa(page: ft.Page):
                 prefix_icon=ft.Icons.SEARCH_ROUNDED,
                 content_padding=ft.padding.symmetric(horizontal=10, vertical=6),
             ),
-            ft.Row(
-                spacing=0,
-                expand=True,
-                controls=[drawer_panel],
-            ),
+            drawer_panel,
         ],
     )
