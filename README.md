@@ -35,7 +35,7 @@ En caso de que el usuario olvide su contraseña, la plataforma ofrece un proceso
 3. El usuario accede al enlace y establece una nueva contraseña.
 4. Una vez confirmada, puede iniciar sesión con la nueva contraseña.
 
-## 5 Gestión de Productos (CRUD)
+### 5 Gestión de Productos (CRUD)
 
 La plataforma contará con un sistema de gestión de productos que permitirá a los vendedores administrar sus publicaciones de manera sencilla. Este módulo incluirá las funciones básicas de un CRUD (Crear, Leer, Actualizar y Eliminar).
 
