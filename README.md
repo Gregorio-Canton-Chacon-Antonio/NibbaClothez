@@ -35,7 +35,29 @@ En caso de que el usuario olvide su contraseña, la plataforma ofrece un proceso
 3. El usuario accede al enlace y establece una nueva contraseña.
 4. Una vez confirmada, puede iniciar sesión con la nueva contraseña.
 
+## 5 Gestión de Productos (CRUD)
 
+La plataforma contará con un sistema de gestión de productos que permitirá a los vendedores administrar sus publicaciones de manera sencilla. Este módulo incluirá las funciones básicas de un CRUD (Crear, Leer, Actualizar y Eliminar).
+
+### Agregar productos
+Los usuarios vendedores podrán publicar nuevas prendas ingresando información como:
+
+- Nombre del producto.
+- Descripción.
+- Precio.
+- Categoría.
+- Imágenes del producto.
+
+Una vez completados los datos, el sistema guardará la publicación y la mostrará dentro de la tienda para que otros usuarios puedan visualizarla. pero lo importante es que tu puedes verlas en tu perfil editarlas, borrarlas.
+
+### Editar productos
+Los vendedores podrán modificar la información de sus publicaciones en cualquier momento. El sistema permitirá actualizar datos como el nombre, descripción, precio, categoría o imágenes del producto.
+
+### Eliminar productos
+Los vendedores también tendrán la opción de eliminar publicaciones que ya no deseen mostrar en la plataforma. Una vez eliminada la prenda, dejará de aparecer en la tienda y no podrá ser visualizada por otros usuarios.
+
+### Visualización de productos
+Los productos publicados podrán ser visualizados por todos los usuarios dentro de la plataforma, mostrando la información y detalles proporcionados por el vendedor.
 
 ##  Integrantes
 
