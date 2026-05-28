@@ -3,7 +3,7 @@ import flet as ft
 
 def VistaDeCasa(page: ft.Page):
 
-    categorias = ["Todos", "Ropa deportiva", "Ropa casual", "Ropa elegante", "Accesorios", "Calzado"]
+    categorias = ["Hombres", "Mujeres", "Niños", "Ropa deportiva", "Ropa casual", "Calzado"]
 
     items_menu = [ft.Text("Categorías", size=13, weight="bold", color="#000000"), ft.Divider(height=8, color="#DDDDDD")]
     for cat in categorias:
