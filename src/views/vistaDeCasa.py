@@ -3,16 +3,48 @@ import flet as ft
 
 def VistaDeCasa(page: ft.Page):
 
-    categorias = ["Hombres", "Mujeres", "Niños", "Ropa deportiva", "Ropa casual", "Calzado"]
+    subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior", "Ropa Interior"]
 
-    items_menu = [ft.Text("Categorías", size=13, weight="bold", color="#000000"), ft.Divider(height=8, color="#DDDDDD")]
-    for cat in categorias:
-        items_menu.append(ft.Container(
+    def make_subcategoria_btn(nombre, genero):
+        return ft.Container(
+            padding=ft.padding.only(left=20, top=7, bottom=7),
+            border_radius=6,
+            ink=True,
+            content=ft.Text(nombre, size=12, color="#444444"),
+            on_click=lambda _: page.go(f"/categoria/{genero}/{nombre}"),
+        )
+
+    def make_categoria_item(nombre):
+        sub_col = ft.Column(
+            visible=False,
+            spacing=0,
+            controls=[make_subcategoria_btn(s, nombre) for s in subcategorias],
+        )
+
+        def toggle_sub(_):
+            sub_col.visible = not sub_col.visible
+            page.update()
+
+        arrow = ft.Icon(ft.Icons.KEYBOARD_ARROW_DOWN_ROUNDED, size=16, color="#555555")
+
+        header = ft.Container(
             padding=ft.padding.symmetric(horizontal=8, vertical=10),
             border_radius=8,
             ink=True,
-            content=ft.Text(cat, size=13, color="#222222"),
-        ))
+            on_click=toggle_sub,
+            content=ft.Row(
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                controls=[ft.Text(nombre, size=13, color="#222222"), arrow],
+            ),
+        )
+        return ft.Column(spacing=0, controls=[header, sub_col])
+
+    items_menu = [
+        ft.Text("Categorías", size=13, weight="bold", color="#000000"),
+        ft.Divider(height=8, color="#DDDDDD"),
+        make_categoria_item("Hombres"),
+        make_categoria_item("Mujeres"),
+    ]
 
     drawer_panel = ft.Container(
         visible=False,
