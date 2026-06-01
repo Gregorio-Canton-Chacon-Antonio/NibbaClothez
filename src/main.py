@@ -41,7 +41,7 @@ async def start(page: ft.Page):
             elif page.route == "/registro":
                 page.views.append(RegistroView(page, auth_ctrl))
             elif page.route == "/perfil":
-                page.views.append(PerfilView(page, auth_ctrl))
+                page.views.append(PerfilView(page, auth_ctrl, prenda_ctrl))
             elif page.route == "/recuperar":
                 page.views.append(RecuperarView(page, auth_ctrl))
             page.update()
