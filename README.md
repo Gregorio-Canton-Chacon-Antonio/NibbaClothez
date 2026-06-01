@@ -59,6 +59,28 @@ Los vendedores también tendrán la opción de eliminar publicaciones que ya no 
 ### Visualización de productos
 Los productos publicados podrán ser visualizados por todos los usuarios dentro de la plataforma, mostrando la información y detalles proporcionados por el vendedor.
 
+### 6 Diseño de Interfaz
+
+La plataforma contará con una interfaz moderna, sencilla e intuitiva, diseñada para facilitar la navegación y mejorar la experiencia de los usuarios al comprar o vender productos. El diseño estará enfocado en la claridad visual, el acceso rápido a las funciones principales y la adaptación a diferentes dispositivos.
+
+### Página de Inicio
+La página principal mostrará los productos destacados y las publicaciones más recientes. También contará con una barra de búsqueda y opciones para filtrar productos por categorías. Desde esta pantalla los usuarios podrán acceder al inicio de sesión, registro y perfil personal.
+
+### Página de Registro e Inicio de Sesión
+Las pantallas de registro y acceso presentarán formularios simples y fáciles de completar. Los usuarios podrán crear una cuenta, iniciar sesión o acceder a la opción de recuperación de contraseña desde una misma sección.
+
+### Perfil de Usuario
+Cada usuario dispondrá de un perfil donde podrá visualizar y administrar sus publicaciones. Desde esta sección será posible agregar nuevos productos, editar publicaciones existentes o eliminar aquellas que ya no deseen mostrar.
+
+### Catálogo de Productos
+El catálogo permitirá visualizar todos los artículos disponibles en la plataforma mediante tarjetas que mostrarán la imagen, nombre, precio y categoría del producto. Los usuarios podrán seleccionar cualquier artículo para consultar información más detallada.
+
+### Vista de Producto
+Al acceder a un producto, se mostrará una página con información completa sobre la publicación, incluyendo imágenes, descripción, precio y datos del vendedor. Esta vista permitirá al usuario conocer mejor el artículo antes de realizar una compra o contactar al vendedor.
+
+### Diseño Responsive
+La interfaz estará diseñada para adaptarse correctamente a computadoras, tabletas y teléfonos móviles, garantizando una experiencia de navegación cómoda y consistente en diferentes tamaños de pantalla.
+
 ##  Integrantes
 
 ### Integrante 1
