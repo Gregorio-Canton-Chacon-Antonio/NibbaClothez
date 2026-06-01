@@ -15,9 +15,12 @@ async def start(page: ft.Page):
     page.window.width = 430
     page.window.height = 720
     page.window.min_width = 430
-    page.window.min_height = 600
-    page.window.resizable = True
+    page.window.max_width = 430
+    page.window.min_height = 720
+    page.window.max_height = 720
+    page.window.resizable = False
     page.window.title_bar_hidden = False
+    page.update()
     await page.window.center()
     page.update()
 
