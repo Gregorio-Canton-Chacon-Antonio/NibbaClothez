@@ -252,29 +252,29 @@ def VistaDeCasa(page: ft.Page):
         precio_label.value = f"Menos de ${maximo}"
         precio_label.update()
 
-    def make_precio_btn(label, maximo):
+    def make_precio_btn(label, maximo, bgcolor, text_color):
         return ft.Container(
-            border_radius=20,
-            border=ft.border.all(1, "#DDDDDD"),
-            padding=ft.padding.symmetric(horizontal=14, vertical=8),
+            border_radius=10,
+            bgcolor=bgcolor,
+            padding=ft.padding.symmetric(vertical=18),
             ink=True,
+            expand=True,
             on_click=lambda _: precio_rapido(maximo),
-            content=ft.Text(label, size=12, color="#222222"),
+            content=ft.Text(label, size=14, color=text_color, text_align=ft.TextAlign.CENTER),
         )
 
     seccion_precios = ft.Column(
         spacing=12,
         controls=[
             ft.Text("Comprar por precios", size=15, weight="bold", color="#000000"),
-            ft.Row(
-                wrap=True,
+            ft.Column(
                 spacing=8,
-                run_spacing=8,
+                expand=True,
                 controls=[
-                    make_precio_btn("Menos de $10", 10),
-                    make_precio_btn("Menos de $25", 25),
-                    make_precio_btn("Menos de $50", 50),
-                    make_precio_btn("Menos de $100", 100),
+                    ft.Row(controls=[make_precio_btn("Menos de $10", 10, "#CC0000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $25", 25, "#000000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $50", 50, "#CC0000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $100", 100, "#000000", "#FFFFFF")], expand=True),
                 ],
             ),
         ],
@@ -289,7 +289,7 @@ def VistaDeCasa(page: ft.Page):
             navbar,
             barra_busqueda,
             drawer_panel,
-            ft.Container(height=16),
+            ft.Container(height=40),
             seccion_precios,
         ],
     )
