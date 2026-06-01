@@ -3,16 +3,48 @@ import flet as ft
 
 def VistaDeCasa(page: ft.Page):
 
-    categorias = ["Todos", "Ropa deportiva", "Ropa casual", "Ropa elegante", "Accesorios", "Calzado"]
+    subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior", "Ropa Interior"]
 
-    items_menu = [ft.Text("Categorías", size=13, weight="bold", color="#000000"), ft.Divider(height=8, color="#DDDDDD")]
-    for cat in categorias:
-        items_menu.append(ft.Container(
+    def make_subcategoria_btn(nombre, genero):
+        return ft.Container(
+            padding=ft.padding.only(left=20, top=7, bottom=7),
+            border_radius=6,
+            ink=True,
+            content=ft.Text(nombre, size=12, color="#444444"),
+            on_click=lambda _: page.go(f"/categoria/{genero}/{nombre}"),
+        )
+
+    def make_categoria_item(nombre):
+        sub_col = ft.Column(
+            visible=False,
+            spacing=0,
+            controls=[make_subcategoria_btn(s, nombre) for s in subcategorias],
+        )
+
+        def toggle_sub(_):
+            sub_col.visible = not sub_col.visible
+            page.update()
+
+        arrow = ft.Icon(ft.Icons.KEYBOARD_ARROW_DOWN_ROUNDED, size=16, color="#555555")
+
+        header = ft.Container(
             padding=ft.padding.symmetric(horizontal=8, vertical=10),
             border_radius=8,
             ink=True,
-            content=ft.Text(cat, size=13, color="#222222"),
-        ))
+            on_click=toggle_sub,
+            content=ft.Row(
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                controls=[ft.Text(nombre, size=13, color="#222222"), arrow],
+            ),
+        )
+        return ft.Column(spacing=0, controls=[header, sub_col])
+
+    items_menu = [
+        ft.Text("Categorías", size=13, weight="bold", color="#000000"),
+        ft.Divider(height=8, color="#DDDDDD"),
+        make_categoria_item("Hombres"),
+        make_categoria_item("Mujeres"),
+    ]
 
     drawer_panel = ft.Container(
         visible=False,
@@ -108,18 +140,100 @@ def VistaDeCasa(page: ft.Page):
         ],
     )
 
-    return ft.View(
-        route="/casa",
-        bgcolor="#FFFFFF",
-        scroll=ft.ScrollMode.AUTO,
-        padding=ft.padding.symmetric(horizontal=16, vertical=16),
+    precio_label = ft.Text("Cualquiera", size=11, color="#444444")
+
+    min_input = ft.TextField(
+        label="Mínimo", width=110, height=42, border_radius=8,
+        filled=True, bgcolor="#F5F5F5", border_color="#CCCCCC",
+        focused_border_color="#000000",
+        label_style=ft.TextStyle(color="#666666", size=11),
+        text_style=ft.TextStyle(color="#000000", size=12),
+        keyboard_type=ft.KeyboardType.NUMBER,
+        content_padding=ft.padding.symmetric(horizontal=8, vertical=4),
+    )
+    max_input = ft.TextField(
+        label="Máximo", width=110, height=42, border_radius=8,
+        filled=True, bgcolor="#F5F5F5", border_color="#CCCCCC",
+        focused_border_color="#000000",
+        label_style=ft.TextStyle(color="#666666", size=11),
+        text_style=ft.TextStyle(color="#000000", size=12),
+        keyboard_type=ft.KeyboardType.NUMBER,
+        content_padding=ft.padding.symmetric(horizontal=8, vertical=4),
+    )
+
+    def aplicar_precio(e):
+        mn = min_input.value.strip()
+        mx = max_input.value.strip()
+        if mn or mx:
+            precio_label.value = f"${mn or '0'} - ${mx or '∞'}" 
+        else:
+            precio_label.value = "Cualquiera"
+        precio_label.update()
+        dialogo_precio.open = False
+        page.update()
+
+    def limpiar_precio(e):
+        min_input.value = ""
+        max_input.value = ""
+        precio_label.value = "Cualquiera"
+        precio_label.update()
+        dialogo_precio.open = False
+        page.update()
+
+    dialogo_precio = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Rango de precio", size=15, weight="bold", color="#000000"),
+        content=ft.Row(spacing=8, controls=[min_input, ft.Text("-", color="#888888"), max_input]),
+        actions=[
+            ft.TextButton("Limpiar", style=ft.ButtonStyle(color="#888888"), on_click=limpiar_precio),
+            ft.ElevatedButton(
+                "Aplicar",
+                style=ft.ButtonStyle(
+                    bgcolor="#000000", color="#FFFFFF",
+                    shape=ft.RoundedRectangleBorder(radius=8),
+                ),
+                on_click=aplicar_precio,
+            ),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+
+    page.overlay.append(dialogo_precio)
+
+    def abrir_precio(_):
+        dialogo_precio.open = True
+        page.update()
+
+    precio_btn = ft.Container(
+        height=38,
+        border_radius=10,
+        bgcolor="#F0F0F0",
+        border=ft.border.all(1, "#DDDDDD"),
+        padding=ft.padding.symmetric(horizontal=10),
+        ink=True,
+        on_click=abrir_precio,
+        content=ft.Row(
+            spacing=4,
+            tight=True,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            controls=[
+                ft.Icon(ft.Icons.ATTACH_MONEY_ROUNDED, size=14, color="#555555"),
+                precio_label,
+                ft.Icon(ft.Icons.KEYBOARD_ARROW_DOWN_ROUNDED, size=14, color="#555555"),
+            ],
+        ),
+    )
+
+    barra_busqueda = ft.Row(
+        spacing=8,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            navbar,
             ft.TextField(
                 hint_text="Buscar...",
                 height=38,
                 border_radius=10,
                 filled=True,
+                expand=True,
                 bgcolor="#F0F0F0",
                 border_color="#DDDDDD",
                 focused_border_color="#000000",
@@ -128,6 +242,54 @@ def VistaDeCasa(page: ft.Page):
                 prefix_icon=ft.Icons.SEARCH_ROUNDED,
                 content_padding=ft.padding.symmetric(horizontal=10, vertical=6),
             ),
+            precio_btn,
+        ],
+    )
+
+    def precio_rapido(maximo):
+        min_input.value = ""
+        max_input.value = str(maximo)
+        precio_label.value = f"Menos de ${maximo}"
+        precio_label.update()
+
+    def make_precio_btn(label, maximo, bgcolor, text_color):
+        return ft.Container(
+            border_radius=10,
+            bgcolor=bgcolor,
+            padding=ft.padding.symmetric(vertical=18),
+            ink=True,
+            expand=True,
+            on_click=lambda _: precio_rapido(maximo),
+            content=ft.Text(label, size=14, color=text_color, text_align=ft.TextAlign.CENTER),
+        )
+
+    seccion_precios = ft.Column(
+        spacing=12,
+        controls=[
+            ft.Text("Comprar por precios", size=15, weight="bold", color="#000000"),
+            ft.Column(
+                spacing=8,
+                expand=True,
+                controls=[
+                    ft.Row(controls=[make_precio_btn("Menos de $10", 10, "#CC0000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $25", 25, "#000000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $50", 50, "#CC0000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $100", 100, "#000000", "#FFFFFF")], expand=True),
+                ],
+            ),
+        ],
+    )
+
+    return ft.View(
+        route="/casa",
+        bgcolor="#FFFFFF",
+        scroll=ft.ScrollMode.AUTO,
+        padding=ft.padding.symmetric(horizontal=16, vertical=16),
+        controls=[
+            navbar,
+            barra_busqueda,
             drawer_panel,
+            ft.Container(height=40),
+            seccion_precios,
         ],
     )
