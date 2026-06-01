@@ -141,6 +141,8 @@ def DashboardView(page, prenda_controller):
             select_condicion.value = "nuevo"
             fotos_lista.clear()
             actualizar_galeria()
+            notificar("¡Publicación creada exitosamente!")
+            page.go("/casa")
         else:
             notificar(mensaje)
 

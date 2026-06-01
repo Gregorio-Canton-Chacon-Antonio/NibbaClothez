@@ -7,6 +7,9 @@ class PrendaController:
     def obtener_lista(self, id_usuario):
         return self.model.listar_por_usuario(id_usuario)
 
+    def obtener_todas(self):
+        return self.model.listar_todas()
+
     def guardar_nueva(self, id_usuario, titulo, precio, talla, condicion, marca, descripcion, foto=""):
         if not titulo:
             return False, "El título es obligatorio"

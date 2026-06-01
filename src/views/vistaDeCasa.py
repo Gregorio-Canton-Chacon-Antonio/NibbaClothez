@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def VistaDeCasa(page: ft.Page):
+def VistaDeCasa(page: ft.Page, prenda_controller):
 
     subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior", "Ropa Interior"]
 
@@ -280,6 +280,42 @@ def VistaDeCasa(page: ft.Page):
         ],
     )
 
+    # Sección de productos (Feed global de todas las cuentas)
+    grid_productos = ft.ResponsiveRow(spacing=15, run_spacing=15)
+
+    def cargar_prendas():
+        prendas = prenda_controller.obtener_todas()
+        grid_productos.controls.clear()
+        
+        for p in prendas:
+            grid_productos.controls.append(
+                ft.Container(
+                    col={"xs": 6, "sm": 6, "md": 4, "lg": 3},
+                    padding=10,
+                    border_radius=12,
+                    bgcolor="#FFFFFF",
+                    border=ft.border.all(1, "#F0F0F0"),
+                    shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.with_opacity(0.05, "black")),
+                    content=ft.Column(
+                        spacing=8,
+                        controls=[
+                            ft.Container(
+                                height=150, border_radius=8, bgcolor="#F5F5F5", clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                                content=ft.Image(src=p["foto"], fit="cover") if p.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#CCCCCC")
+                            ),
+                            ft.Text(p["titulo"], size=13, weight="bold", max_lines=1, overflow=ft.TextOverflow.ELLIPSIS, color="#000000"),
+                            ft.Row(
+                                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                                controls=[ft.Text(f"${p['precio']}", size=12, weight="bold", color="#22AA44"), ft.Text(p["talla"], size=11, color="#666666")]
+                            ),
+                        ]
+                    )
+                )
+            )
+        page.update()
+
+    cargar_prendas()
+
     return ft.View(
         route="/casa",
         bgcolor="#FFFFFF",
@@ -289,6 +325,9 @@ def VistaDeCasa(page: ft.Page):
             navbar,
             barra_busqueda,
             drawer_panel,
+            ft.Container(height=40),
+            ft.Text("Explorar Novedades", size=18, weight="bold", color="#000000"),
+            grid_productos,
             ft.Container(height=40),
             seccion_precios,
         ],

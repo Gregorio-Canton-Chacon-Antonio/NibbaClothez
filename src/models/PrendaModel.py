@@ -12,6 +12,14 @@ class PrendaModel:
         conn.close()
         return resultado
 
+    def listar_todas(self):
+        conn = self.db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM prenda ORDER BY fecha_subida DESC")
+        resultado = cursor.fetchall()
+        conn.close()
+        return resultado
+
     def crear(self, id_usuario, titulo, precio, talla, condicion, marca, descripcion, foto=""):
         conn = self.db.get_connection()
         cursor = conn.cursor()

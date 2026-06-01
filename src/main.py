@@ -36,7 +36,7 @@ async def start(page: ft.Page):
         try:
             page.views.clear()
             if page.route == "/casa":
-                page.views.append(VistaDeCasa(page))
+                page.views.append(VistaDeCasa(page, prenda_ctrl))
             elif page.route == "/":
                 page.views.append(LoginView(page, auth_ctrl))
             elif page.route == "/dashboard":
