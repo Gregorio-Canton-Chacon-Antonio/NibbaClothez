@@ -14,6 +14,37 @@ def PerfilView(page, auth_controller, prenda_controller):
     datos = getattr(page, "user_data", None) or {}
     lista_prendas = ft.Column(spacing=10)
 
+    def cerrar_sesion(e):
+        def confirmar_salida(_):
+            page.user_data = None
+            dialogo_confirmacion.open = False
+            page.update()
+            page.go("/")
+
+        def cancelar_salida(_):
+            dialogo_confirmacion.open = False
+            page.update()
+
+        dialogo_confirmacion = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Cerrar sesión", size=18, weight="bold"),
+            content=ft.Text("¿Estas seguro de que quieres salir de la cuenta?"),
+            actions=[
+                ft.TextButton("Cancelar", on_click=cancelar_salida),
+                ft.ElevatedButton(
+                    "Sí, salir", 
+                    bgcolor=ft.Colors.RED_700, 
+                    color=ft.Colors.WHITE,
+                    on_click=confirmar_salida
+                ),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+
+        page.overlay.append(dialogo_confirmacion)
+        dialogo_confirmacion.open = True
+        page.update()
+
     def notificar(texto):
         page.snack_bar = ft.SnackBar(ft.Text(texto, color=ft.Colors.WHITE), bgcolor="#333333")
         page.snack_bar.open = True
@@ -235,7 +266,7 @@ def PerfilView(page, auth_controller, prenda_controller):
                     controls=[
                 ft.IconButton(ft.Icons.HOME_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/casa")),
                 ft.IconButton(ft.Icons.CHECKROOM_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/dashboard")),
-                        ft.IconButton(ft.Icons.LOGOUT_ROUNDED, icon_color="#000000", on_click=lambda _: [setattr(page, "user_data", None), page.go("/")][1]),
+                        ft.IconButton(ft.Icons.LOGOUT_ROUNDED, icon_color="#000000", on_click=cerrar_sesion),
                     ],
                 ),
             ],

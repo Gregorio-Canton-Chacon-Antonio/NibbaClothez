@@ -1,7 +1,18 @@
 import flet as ft
 
+CONDICION_LABELS = {
+    "nuevo": "Nuevo",
+    "como_nuevo": "Como nuevo",
+    "usado_excelente": "Usado - Excelente",
+    "usado_buen_estado": "Usado - Buen estado",
+    "usado_aceptable": "Usado - Aceptable",
+}
 
 def VistaDeCasa(page: ft.Page, prenda_controller):
+
+    def mostrar_detalle(p):
+        page.selected_prenda = p
+        page.go("/prenda")
 
     subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior", "Ropa Interior"]
 
@@ -39,6 +50,8 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
         )
         return ft.Column(spacing=0, controls=[header, sub_col])
 
+    sesion_activa = getattr(page, "user_data", None)
+
     items_menu = [
         ft.Text("Categorías", size=13, weight="bold", color="#000000"),
         ft.Divider(height=8, color="#DDDDDD"),
@@ -58,8 +71,6 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
     def toggle_drawer(_):
         drawer_panel.visible = not drawer_panel.visible
         page.update()
-
-    sesion_activa = getattr(page, "user_data", None)
 
     if sesion_activa:
         botones_auth = [
@@ -295,6 +306,8 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
                     border_radius=12,
                     bgcolor="#FFFFFF",
                     border=ft.border.all(1, "#F0F0F0"),
+                    ink=True,
+                    on_click=lambda _, item=p: mostrar_detalle(item),
                     shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.with_opacity(0.05, "black")),
                     content=ft.Column(
                         spacing=8,
