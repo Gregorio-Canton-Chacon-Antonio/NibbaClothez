@@ -108,10 +108,22 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
             )
         page.update()
 
+    drawer_panel = ft.Container(
+        visible=False,
+        width=220,
+        bgcolor="#F8F8F8",
+        border=ft.border.only(right=ft.BorderSide(1, "#DDDDDD")),
+        padding=ft.padding.symmetric(horizontal=12, vertical=16),
+        content=ft.Column(spacing=4, controls=[]),
+    )
+
+    titulo_filtro = ft.Text("Todas las prendas", size=14, weight="bold", color="#CC0000")
+
     def aplicar_filtro(genero, categoria):
         filtro_genero["valor"] = genero
         filtro_categoria["valor"] = categoria
         drawer_panel.visible = False
+        titulo_filtro.value = f"{genero} · {categoria}" if genero and categoria else "Todas las prendas"
         cargar_prendas()
 
     def make_subcategoria_btn(nombre, genero):
@@ -148,23 +160,22 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
         )
         return ft.Column(spacing=0, controls=[header, sub_col])
 
-    sesion_activa = getattr(page, "user_data", None)
-
-    items_menu = [
+    drawer_panel.content.controls = [
         ft.Text("Categorías", size=13, weight="bold", color="#000000"),
         ft.Divider(height=8, color="#DDDDDD"),
         make_categoria_item("Hombres"),
         make_categoria_item("Mujeres"),
+        ft.Divider(height=8, color="#DDDDDD"),
+        ft.Container(
+            padding=ft.padding.symmetric(horizontal=8, vertical=8),
+            border_radius=6,
+            ink=True,
+            content=ft.Text("Ver todo", size=12, color="#CC0000"),
+            on_click=lambda _: aplicar_filtro(None, None),
+        ),
     ]
 
-    drawer_panel = ft.Container(
-        visible=False,
-        width=220,
-        bgcolor="#F8F8F8",
-        border=ft.border.only(right=ft.BorderSide(1, "#DDDDDD")),
-        padding=ft.padding.symmetric(horizontal=12, vertical=16),
-        content=ft.Column(spacing=4, controls=items_menu),
-    )
+    sesion_activa = getattr(page, "user_data", None)
 
     def toggle_drawer(_):
         drawer_panel.visible = not drawer_panel.visible
@@ -402,6 +413,7 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
             drawer_panel,
             ft.Container(height=40),
             ft.Text("Explorar Novedades", size=18, weight="bold", color="#000000"),
+            titulo_filtro,
             grid_productos,
             ft.Container(height=40),
             seccion_precios,
