@@ -9,6 +9,7 @@ from views.UserView import PerfilView
 from views.RecuperarView import RecuperarView
 from views.vistaDeCasa import VistaDeCasa
 from views.PrendaDetalleView import PrendaDetalleView
+from views.PerfilVendedorView import PerfilVendedorView
 
 
 async def start(page: ft.Page):
@@ -50,6 +51,8 @@ async def start(page: ft.Page):
                 page.views.append(RecuperarView(page, auth_ctrl))
             elif page.route == "/prenda":
                 page.views.append(PrendaDetalleView(page, auth_ctrl))
+            elif page.route == "/perfil_vendedor":
+                page.views.append(PerfilVendedorView(page, prenda_ctrl))
             page.update()
         except Exception:
             traceback.print_exc()
