@@ -50,7 +50,11 @@ class UsuarioModel:
         user = cursor.fetchone()
         conn.close()
         if user and user.get("foto_perfil"):
-            user["foto_perfil"] = "data:image/jpeg;base64," + base64.b64encode(user["foto_perfil"]).decode()
+            fp = user["foto_perfil"]
+            if isinstance(fp, (bytes, bytearray)):
+                user["foto_perfil"] = "data:image/jpeg;base64," + base64.b64encode(fp).decode()
+            else:
+                user["foto_perfil"] = None
         return user
 
     def guardar_foto_perfil(self, id_usuario, foto_bytes):

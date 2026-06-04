@@ -63,8 +63,11 @@ class AuthController:
 
     def obtener_usuario(self, id_usuario):
         try:
-            return self.model.buscar_por_id(id_usuario)
-        except Exception:
+            user = self.model.buscar_por_id(id_usuario)
+            print(f"[DEBUG] obtener_usuario({id_usuario}): {user}")
+            return user
+        except Exception as e:
+            print(f"[ERROR] obtener_usuario: {e}")
             return None
 
     def guardar_foto_perfil(self, id_usuario, foto_bytes):
