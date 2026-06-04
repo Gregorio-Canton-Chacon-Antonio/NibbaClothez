@@ -1,5 +1,6 @@
 import flet as ft
 
+
 CONDICION_LABELS = {
     "nuevo": "Nuevo",
     "como_nuevo": "Como nuevo",

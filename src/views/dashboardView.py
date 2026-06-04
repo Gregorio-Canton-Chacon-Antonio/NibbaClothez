@@ -1,6 +1,7 @@
 import flet as ft
 import os
-import base64
+import shutil
+import uuid
 
 CONDICION_LABELS = {
     "nuevo": "Nuevo",
@@ -23,12 +24,14 @@ def DashboardView(page, prenda_controller):
     texto_conteo = ft.Text("Fotos · 0 / 5", size=14, weight="bold", color="#000000")
     contenedor_fotos = ft.Row(spacing=10, scroll=ft.ScrollMode.AUTO)
 
-    def ver_foto(img_base64):
+    UPLOADS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "img", "uploads")
+
+    def ver_foto(img_path):
         def cerrar_dialogo(_):
             dialogo.open = False
             page.update()
         dialogo = ft.AlertDialog(
-            content=ft.Image(src=img_base64, fit="contain", border_radius=10),
+            content=ft.Image(src=img_path, fit="contain", border_radius=10),
             actions=[ft.TextButton("Cerrar", on_click=cerrar_dialogo)]
         )
         page.overlay.append(dialogo)
@@ -44,18 +47,18 @@ def DashboardView(page, prenda_controller):
         if len(fotos_lista) < 5:
             contenedor_fotos.controls.append(preview_imagen)
         
-        for i, f_base64 in enumerate(fotos_lista):
+        for i, f_path in enumerate(fotos_lista):
             contenedor_fotos.controls.append(
                 ft.Stack([
                     ft.Container(
                         width=120, height=120, border_radius=10,
-                        content=ft.Image(src=f_base64, fit="cover", width=120, height=120)
+                        content=ft.Image(src=f_path, fit="cover", width=120, height=120)
                     ),
                     ft.IconButton(
                         ft.Icons.EDIT_ROUNDED, icon_color="white",
                         bgcolor=ft.Colors.with_opacity(0.4, "black"),
                         left=-5, top=-5, icon_size=16,
-                        on_click=lambda _, img=f_base64: ver_foto(img)
+                        on_click=lambda _, img=f_path: ver_foto(img)
                     ),
                     ft.IconButton(ft.Icons.CANCEL, icon_color="red", right=-5, top=-5, 
                                   on_click=lambda _, idx=i: eliminar_foto(idx))
@@ -93,8 +96,11 @@ def DashboardView(page, prenda_controller):
             
         for f_obj in files[:restantes]:
             if f_obj.path:
-                with open(f_obj.path, "rb") as f:
-                    fotos_lista.append(base64.b64encode(f.read()).decode())
+                ext = os.path.splitext(f_obj.path)[1]
+                nombre = f"{uuid.uuid4().hex}{ext}"
+                destino = os.path.join(UPLOADS_DIR, nombre)
+                shutil.copy2(f_obj.path, destino)
+                fotos_lista.append(f"uploads/{nombre}")
         
         actualizar_galeria()
 
