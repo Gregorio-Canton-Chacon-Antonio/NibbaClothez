@@ -15,7 +15,7 @@ def _build_carrusel(page, prenda):
         return ft.Container(
             height=400, bgcolor="#F5F5F5",
             content=ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, size=100, color="#CCCCCC"),
-            alignment=ft.alignment.center,
+            alignment=ft.alignment.Alignment(0, 0),
         )
 
     idx_state = {"i": 0}

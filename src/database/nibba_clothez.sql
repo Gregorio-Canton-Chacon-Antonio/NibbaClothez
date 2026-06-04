@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `prenda_foto` (
 CREATE TABLE IF NOT EXISTS `prenda` (
   `id_prenda` int(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` int(11) NOT NULL,
-  `foto` varchar(255) NOT NULL DEFAULT '',
+  `foto` longtext DEFAULT NULL,
   `titulo` varchar(200) NOT NULL,
   `precio` decimal(10,2) NOT NULL,
   `talla` varchar(50) NOT NULL,
@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS `prenda` (
   `tags` text DEFAULT NULL,
   `fecha_subida` timestamp NULL DEFAULT current_timestamp(),
   `vendido` tinyint(1) DEFAULT 0,
+  `genero` varchar(20) NOT NULL DEFAULT 'Unisex',
+  `categoria` varchar(50) NOT NULL DEFAULT 'Ropa Superior',
   PRIMARY KEY (`id_prenda`),
   KEY `fk_vendedor` (`id_usuario`),
   CONSTRAINT `fk_vendedor_prenda` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE
