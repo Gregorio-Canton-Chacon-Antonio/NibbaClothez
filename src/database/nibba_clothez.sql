@@ -21,10 +21,20 @@ CREATE TABLE IF NOT EXISTS `password_resets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+CREATE TABLE IF NOT EXISTS `prenda_foto` (
+  `id_foto` int(11) NOT NULL AUTO_INCREMENT,
+  `id_prenda` int(11) NOT NULL,
+  `imagen` MEDIUMBLOB NOT NULL,
+  `orden` int(11) DEFAULT 0,
+  PRIMARY KEY (`id_foto`),
+  KEY `id_prenda` (`id_prenda`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 CREATE TABLE IF NOT EXISTS `prenda` (
   `id_prenda` int(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` int(11) NOT NULL,
-  `foto` varchar(255) NOT NULL,
+  `foto` varchar(255) NOT NULL DEFAULT '',
   `titulo` varchar(200) NOT NULL,
   `precio` decimal(10,2) NOT NULL,
   `talla` varchar(50) NOT NULL,
