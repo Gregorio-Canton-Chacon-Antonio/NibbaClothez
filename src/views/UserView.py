@@ -58,14 +58,15 @@ def PerfilView(page, auth_controller, prenda_controller):
             notificar(mensaje)
 
     def abrir_editor(prenda):
-        foto_edit = [prenda.get("foto", "")]
+        foto_bytes_edit = [None]  # None = sin cambios
+        fotos_actuales = [f for f in (prenda.get("foto") or "").split("|") if f]
 
         preview_edit = ft.Container(
             width=320, height=160, border_radius=10,
             bgcolor="#F0F0F0", border=ft.border.all(1, "#CCCCCC"),
             clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-            content=ft.Image(src=prenda["foto"], fit="cover", width=320, height=160)
-            if prenda.get("foto") else ft.Column(
+            content=ft.Image(src=fotos_actuales[0], fit="cover", width=320, height=160)
+            if fotos_actuales else ft.Column(
                 alignment=ft.MainAxisAlignment.CENTER,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 controls=[
@@ -82,8 +83,10 @@ def PerfilView(page, auth_controller, prenda_controller):
             if not files or not files[0].path:
                 return
             with open(files[0].path, "rb") as f:
-                foto_edit[0] = base64.b64encode(f.read()).decode()
-            preview_edit.content = ft.Image(src=foto_edit[0], fit="cover", width=320, height=160)
+                raw = f.read()
+            foto_bytes_edit[0] = raw
+            b64 = "data:image/jpeg;base64," + base64.b64encode(raw).decode()
+            preview_edit.content = ft.Image(src=b64, fit="cover", width=320, height=160)
             preview_edit.update()
 
         preview_edit.on_click = cambiar_foto_edit
@@ -153,12 +156,12 @@ def PerfilView(page, auth_controller, prenda_controller):
             if not e_titulo.value or not e_precio.value or not e_talla.value:
                 notificar("Título, precio y talla son obligatorios")
                 return
-            foto_nueva = foto_edit[0] if foto_edit[0] != prenda.get("foto", "") else None
+            nuevas_fotos = [foto_bytes_edit[0]] if foto_bytes_edit[0] is not None else None
             exito, msg = prenda_controller.editar_prenda(
                 datos["id_usuario"], prenda["id_prenda"], e_titulo.value, e_precio.value,
                 e_talla.value, e_condicion.value,
                 e_marca.value or "Sin marca", e_descripcion.value or "",
-                foto_nueva,
+                nuevas_fotos,
             )
             if exito:
                 cerrar_bs()

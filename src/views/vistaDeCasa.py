@@ -17,7 +17,7 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
     filtro_genero = {"valor": None}
     filtro_categoria = {"valor": None}
 
-    subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior", "Ropa Interior"]
+    subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior"]
 
     grid_productos = ft.ResponsiveRow(spacing=15, run_spacing=15)
 
