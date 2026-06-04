@@ -17,7 +17,7 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
     filtro_genero = {"valor": None}
     filtro_categoria = {"valor": None}
 
-    subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior"]
+    subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior", "Ropa Interior"]
 
     grid_productos = ft.ResponsiveRow(spacing=15, run_spacing=15)
 
@@ -29,60 +29,6 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
                 continue
             if filtro_categoria["valor"] and p.get("categoria") != filtro_categoria["valor"]:
                 continue
-            fotos = [f for f in (p.get("foto") or "").split("|") if f]
-            idx_state = {"i": 0}
-
-            img_widget = ft.Image(
-                src=fotos[0] if fotos else "",
-                fit="cover", width=float("inf"), height=150,
-            ) if fotos else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#CCCCCC")
-
-            def make_nav(fotos_ref, idx_ref, img_ref, delta):
-                def handler(e):
-                    e.stop_propagation = True
-                    idx_ref["i"] = (idx_ref["i"] + delta) % len(fotos_ref)
-                    img_ref.src = fotos_ref[idx_ref["i"]]
-                    img_ref.update()
-                return handler
-
-            nav_controls = []
-            if len(fotos) > 1:
-                btn_style = ft.ButtonStyle(
-                    bgcolor=ft.Colors.with_opacity(0.55, "black"),
-                    shape=ft.CircleBorder(),
-                    padding=ft.padding.all(4),
-                )
-                nav_controls = [
-                    ft.Container(
-                        left=4, top=55,
-                        content=ft.IconButton(
-                            ft.Icons.CHEVRON_LEFT, icon_color="white", icon_size=18,
-                            style=btn_style,
-                            on_click=make_nav(fotos, idx_state, img_widget, -1),
-                        )
-                    ),
-                    ft.Container(
-                        right=4, top=55,
-                        content=ft.IconButton(
-                            ft.Icons.CHEVRON_RIGHT, icon_color="white", icon_size=18,
-                            style=btn_style,
-                            on_click=make_nav(fotos, idx_state, img_widget, 1),
-                        )
-                    ),
-                ]
-
-            imagen_container = ft.Stack(
-                height=150,
-                controls=[
-                    ft.Container(
-                        height=150, border_radius=8, bgcolor="#F5F5F5",
-                        clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                        content=img_widget,
-                    ),
-                    *nav_controls,
-                ]
-            )
-
             grid_productos.controls.append(
                 ft.Container(
                     col={"xs": 6, "sm": 6, "md": 4, "lg": 3},
@@ -96,7 +42,10 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
                     content=ft.Column(
                         spacing=8,
                         controls=[
-                            imagen_container,
+                            ft.Container(
+                                height=150, border_radius=8, bgcolor="#F5F5F5", clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                                content=ft.Image(src=p["foto"], fit="cover") if p.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#CCCCCC")
+                            ),
                             ft.Text(p["titulo"], size=13, weight="bold", max_lines=1, overflow=ft.TextOverflow.ELLIPSIS, color="#000000"),
                             ft.Row(
                                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -108,22 +57,10 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
             )
         page.update()
 
-    drawer_panel = ft.Container(
-        visible=False,
-        width=220,
-        bgcolor="#F8F8F8",
-        border=ft.border.only(right=ft.BorderSide(1, "#DDDDDD")),
-        padding=ft.padding.symmetric(horizontal=12, vertical=16),
-        content=ft.Column(spacing=4, controls=[]),
-    )
-
-    titulo_filtro = ft.Text("Todas las prendas", size=14, weight="bold", color="#CC0000")
-
     def aplicar_filtro(genero, categoria):
         filtro_genero["valor"] = genero
         filtro_categoria["valor"] = categoria
         drawer_panel.visible = False
-        titulo_filtro.value = f"{genero} · {categoria}" if genero and categoria else "Todas las prendas"
         cargar_prendas()
 
     def make_subcategoria_btn(nombre, genero):
@@ -160,22 +97,23 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
         )
         return ft.Column(spacing=0, controls=[header, sub_col])
 
-    drawer_panel.content.controls = [
+    sesion_activa = getattr(page, "user_data", None)
+
+    items_menu = [
         ft.Text("Categorías", size=13, weight="bold", color="#000000"),
         ft.Divider(height=8, color="#DDDDDD"),
         make_categoria_item("Hombres"),
         make_categoria_item("Mujeres"),
-        ft.Divider(height=8, color="#DDDDDD"),
-        ft.Container(
-            padding=ft.padding.symmetric(horizontal=8, vertical=8),
-            border_radius=6,
-            ink=True,
-            content=ft.Text("Ver todo", size=12, color="#CC0000"),
-            on_click=lambda _: aplicar_filtro(None, None),
-        ),
     ]
 
-    sesion_activa = getattr(page, "user_data", None)
+    drawer_panel = ft.Container(
+        visible=False,
+        width=220,
+        bgcolor="#F8F8F8",
+        border=ft.border.only(right=ft.BorderSide(1, "#DDDDDD")),
+        padding=ft.padding.symmetric(horizontal=12, vertical=16),
+        content=ft.Column(spacing=4, controls=items_menu),
+    )
 
     def toggle_drawer(_):
         drawer_panel.visible = not drawer_panel.visible
@@ -391,10 +329,10 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
                 spacing=8,
                 expand=True,
                 controls=[
-                    ft.Row(controls=[make_precio_btn("Menos de $10", 10, "#CC0000", "#FFFFFF")], expand=True),
-                    ft.Row(controls=[make_precio_btn("Menos de $25", 25, "#000000", "#FFFFFF")], expand=True),
-                    ft.Row(controls=[make_precio_btn("Menos de $50", 50, "#CC0000", "#FFFFFF")], expand=True),
-                    ft.Row(controls=[make_precio_btn("Menos de $100", 100, "#000000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $100", 100, "#CC0000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $250", 250, "#000000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $500", 500, "#CC0000", "#FFFFFF")], expand=True),
+                    ft.Row(controls=[make_precio_btn("Menos de $1000", 1000, "#000000", "#FFFFFF")], expand=True),
                 ],
             ),
         ],
@@ -413,7 +351,6 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
             drawer_panel,
             ft.Container(height=40),
             ft.Text("Explorar Novedades", size=18, weight="bold", color="#000000"),
-            titulo_filtro,
             grid_productos,
             ft.Container(height=40),
             seccion_precios,
