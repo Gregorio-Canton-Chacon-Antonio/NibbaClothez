@@ -10,13 +10,13 @@ class PrendaController:
     def obtener_todas(self):
         return self.model.listar_todas()
 
-    def guardar_nueva(self, id_usuario, titulo, precio, talla, condicion, marca, descripcion, foto=""):
+    def guardar_nueva(self, id_usuario, titulo, precio, talla, condicion, marca, descripcion, foto="", genero="Unisex", categoria="Ropa Superior"):
         if not titulo:
             return False, "El título es obligatorio"
         if not precio:
             return False, "El precio es obligatorio"
         try:
-            self.model.crear(id_usuario, titulo, float(precio), talla, condicion, marca, descripcion, foto)
+            self.model.crear(id_usuario, titulo, float(precio), talla, condicion, marca, descripcion, foto, genero, categoria)
             return True, "Prenda guardada"
         except ValueError:
             return False, "El precio debe ser un número válido"

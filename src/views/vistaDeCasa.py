@@ -1,6 +1,5 @@
 import flet as ft
 
-
 CONDICION_LABELS = {
     "nuevo": "Nuevo",
     "como_nuevo": "Como nuevo",
@@ -15,7 +14,54 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
         page.selected_prenda = p
         page.go("/prenda")
 
+    filtro_genero = {"valor": None}
+    filtro_categoria = {"valor": None}
+
     subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior", "Ropa Interior"]
+
+    grid_productos = ft.ResponsiveRow(spacing=15, run_spacing=15)
+
+    def cargar_prendas():
+        prendas = prenda_controller.obtener_todas()
+        grid_productos.controls.clear()
+        for p in prendas:
+            if filtro_genero["valor"] and p.get("genero") != filtro_genero["valor"]:
+                continue
+            if filtro_categoria["valor"] and p.get("categoria") != filtro_categoria["valor"]:
+                continue
+            grid_productos.controls.append(
+                ft.Container(
+                    col={"xs": 6, "sm": 6, "md": 4, "lg": 3},
+                    padding=10,
+                    border_radius=12,
+                    bgcolor="#FFFFFF",
+                    border=ft.border.all(1, "#F0F0F0"),
+                    ink=True,
+                    on_click=lambda _, item=p: mostrar_detalle(item),
+                    shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.with_opacity(0.05, "black")),
+                    content=ft.Column(
+                        spacing=8,
+                        controls=[
+                            ft.Container(
+                                height=150, border_radius=8, bgcolor="#F5F5F5", clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                                content=ft.Image(src=p["foto"], fit="cover") if p.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#CCCCCC")
+                            ),
+                            ft.Text(p["titulo"], size=13, weight="bold", max_lines=1, overflow=ft.TextOverflow.ELLIPSIS, color="#000000"),
+                            ft.Row(
+                                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                                controls=[ft.Text(f"${p['precio']}", size=12, weight="bold", color="#22AA44"), ft.Text(p["talla"], size=11, color="#666666")]
+                            ),
+                        ]
+                    )
+                )
+            )
+        page.update()
+
+    def aplicar_filtro(genero, categoria):
+        filtro_genero["valor"] = genero
+        filtro_categoria["valor"] = categoria
+        drawer_panel.visible = False
+        cargar_prendas()
 
     def make_subcategoria_btn(nombre, genero):
         return ft.Container(
@@ -23,7 +69,7 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
             border_radius=6,
             ink=True,
             content=ft.Text(nombre, size=12, color="#444444"),
-            on_click=lambda _: page.go(f"/categoria/{genero}/{nombre}"),
+            on_click=lambda _, g=genero, c=nombre: aplicar_filtro(g, c),
         )
 
     def make_categoria_item(nombre):
@@ -177,7 +223,7 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
         mn = min_input.value.strip()
         mx = max_input.value.strip()
         if mn or mx:
-            precio_label.value = f"${mn or '0'} - ${mx or '∞'}" 
+            precio_label.value = f"${mn or '0'} - ${mx or '∞'}"
         else:
             precio_label.value = "Cualquiera"
         precio_label.update()
@@ -291,42 +337,6 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
             ),
         ],
     )
-
-    # Sección de productos (Feed global de todas las cuentas)
-    grid_productos = ft.ResponsiveRow(spacing=15, run_spacing=15)
-
-    def cargar_prendas():
-        prendas = prenda_controller.obtener_todas()
-        grid_productos.controls.clear()
-        
-        for p in prendas:
-            grid_productos.controls.append(
-                ft.Container(
-                    col={"xs": 6, "sm": 6, "md": 4, "lg": 3},
-                    padding=10,
-                    border_radius=12,
-                    bgcolor="#FFFFFF",
-                    border=ft.border.all(1, "#F0F0F0"),
-                    ink=True,
-                    on_click=lambda _, item=p: mostrar_detalle(item),
-                    shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.with_opacity(0.05, "black")),
-                    content=ft.Column(
-                        spacing=8,
-                        controls=[
-                            ft.Container(
-                                height=150, border_radius=8, bgcolor="#F5F5F5", clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                                content=ft.Image(src=p["foto"], fit="cover") if p.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#CCCCCC")
-                            ),
-                            ft.Text(p["titulo"], size=13, weight="bold", max_lines=1, overflow=ft.TextOverflow.ELLIPSIS, color="#000000"),
-                            ft.Row(
-                                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                                controls=[ft.Text(f"${p['precio']}", size=12, weight="bold", color="#22AA44"), ft.Text(p["talla"], size=11, color="#666666")]
-                            ),
-                        ]
-                    )
-                )
-            )
-        page.update()
 
     cargar_prendas()
 

@@ -20,12 +20,12 @@ class PrendaModel:
         conn.close()
         return resultado
 
-    def crear(self, id_usuario, titulo, precio, talla, condicion, marca, descripcion, foto=""):
+    def crear(self, id_usuario, titulo, precio, talla, condicion, marca, descripcion, foto="", genero="Unisex", categoria="Ropa Superior"):
         conn = self.db.get_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO prenda (id_usuario, foto, titulo, precio, talla, condicion, marca, descripcion) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-            (id_usuario, foto, titulo, precio, talla, condicion, marca, descripcion)
+            "INSERT INTO prenda (id_usuario, foto, titulo, precio, talla, condicion, marca, descripcion, genero, categoria) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (id_usuario, foto, titulo, precio, talla, condicion, marca, descripcion, genero, categoria)
         )
         conn.commit()
         conn.close()

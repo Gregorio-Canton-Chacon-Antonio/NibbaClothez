@@ -125,8 +125,33 @@ def DashboardView(page, prenda_controller):
         label="Condición", expand=True, border_radius=10,
         bgcolor="#F5F5F5", border_color="#CCCCCC", focused_border_color="#000000",
         label_style=ft.TextStyle(color="#666666"), color="#000000",
-        options=[ft.dropdown.Option(k, text=v) for k, v in CONDICION_LABELS.items()] + [ft.dropdown.Option("usado_buen_estado", "Usado")],
+        options=[ft.dropdown.Option(k, text=v) for k, v in CONDICION_LABELS.items()],
         value="nuevo",
+    )
+
+    select_genero = ft.Dropdown(
+        label="Género", expand=True, border_radius=10,
+        bgcolor="#F5F5F5", border_color="#CCCCCC", focused_border_color="#000000",
+        label_style=ft.TextStyle(color="#666666"), color="#000000",
+        options=[
+            ft.dropdown.Option("Hombres"),
+            ft.dropdown.Option("Mujeres"),
+            ft.dropdown.Option("Unisex"),
+        ],
+        value="Unisex",
+    )
+
+    select_categoria = ft.Dropdown(
+        label="Categoría", expand=True, border_radius=10,
+        bgcolor="#F5F5F5", border_color="#CCCCCC", focused_border_color="#000000",
+        label_style=ft.TextStyle(color="#666666"), color="#000000",
+        options=[
+            ft.dropdown.Option("Ropa Superior"),
+            ft.dropdown.Option("Ropa Inferior"),
+            ft.dropdown.Option("Ropa Interior"),
+            ft.dropdown.Option("Ropa Exterior"),
+        ],
+        value="Ropa Superior",
     )
 
     def nueva_prenda(e):
@@ -140,11 +165,13 @@ def DashboardView(page, prenda_controller):
             usuario_actual["id_usuario"], input_titulo.value, input_precio.value,
             input_talla.value, select_condicion.value,
             input_marca.value or "Sin marca", input_descripcion.value or "",
-            foto_principal,
+            foto_principal, select_genero.value, select_categoria.value,
         )
         if exito:
             input_titulo.value = input_precio.value = input_talla.value = input_marca.value = input_descripcion.value = ""
             select_condicion.value = "nuevo"
+            select_genero.value = "Unisex"
+            select_categoria.value = "Ropa Superior"
             fotos_lista.clear()
             actualizar_galeria()
             notificar("¡Publicación creada exitosamente!")
@@ -188,6 +215,7 @@ def DashboardView(page, prenda_controller):
                 input_titulo,
                 input_precio,
                 ft.Row(spacing=10, controls=[select_condicion, input_talla]),
+                ft.Row(spacing=10, controls=[select_genero, select_categoria]),
                 input_marca,
                 input_descripcion,
             ]
