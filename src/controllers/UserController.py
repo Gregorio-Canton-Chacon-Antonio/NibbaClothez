@@ -60,3 +60,16 @@ class AuthController:
             return ok, "Contraseña actualizada" if ok else "Error al actualizar"
         except Exception as e:
             return False, str(e)
+
+    def obtener_usuario(self, id_usuario):
+        try:
+            return self.model.buscar_por_id(id_usuario)
+        except Exception:
+            return None
+
+    def guardar_foto_perfil(self, id_usuario, foto_bytes):
+        try:
+            ok = self.model.guardar_foto_perfil(id_usuario, foto_bytes)
+            return ok, "Foto actualizada" if ok else "Error al guardar"
+        except Exception as e:
+            return False, str(e)

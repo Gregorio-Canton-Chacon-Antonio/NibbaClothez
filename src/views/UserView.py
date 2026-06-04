@@ -14,6 +14,34 @@ def PerfilView(page, auth_controller, prenda_controller):
     datos = getattr(page, "user_data", None) or {}
     lista_prendas = ft.Column(spacing=10)
 
+    foto_perfil_b64 = [datos.get("foto_perfil") or None]
+
+    avatar_img = ft.Container(
+        width=80, height=80, border_radius=40,
+        bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
+        clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+        content=ft.Image(src=foto_perfil_b64[0], fit="cover", width=80, height=80)
+        if foto_perfil_b64[0] else ft.Icon(ft.Icons.PERSON_ROUNDED, size=45, color="#000000"),
+    )
+
+    async def cambiar_foto_perfil(_):
+        files = await page.file_picker.pick_files(
+            allowed_extensions=["jpg", "jpeg", "png", "webp"], allow_multiple=False
+        )
+        if not files or not files[0].path:
+            return
+        with open(files[0].path, "rb") as f:
+            raw = f.read()
+        ok, msg = auth_controller.guardar_foto_perfil(datos["id_usuario"], raw)
+        if ok:
+            b64 = "data:image/jpeg;base64," + base64.b64encode(raw).decode()
+            foto_perfil_b64[0] = b64
+            page.user_data["foto_perfil"] = b64
+            avatar_img.content = ft.Image(src=b64, fit="cover", width=80, height=80)
+            avatar_img.update()
+        else:
+            notificar(msg)
+
     def cerrar_sesion(e):
         def confirmar_salida(_):
             page.user_data = None
@@ -283,10 +311,17 @@ def PerfilView(page, auth_controller, prenda_controller):
         content=ft.Column(
             horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=8,
             controls=[
-                ft.Container(
-                    width=80, height=80, border_radius=40,
-                    bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
-                    content=ft.Icon(ft.Icons.PERSON_ROUNDED, size=45, color="#000000"),
+                ft.Stack(
+                    controls=[
+                        avatar_img,
+                        ft.Container(
+                            right=0, bottom=0,
+                            width=24, height=24, border_radius=12,
+                            bgcolor="#000000",
+                            content=ft.Icon(ft.Icons.CAMERA_ALT_ROUNDED, size=14, color="#FFFFFF"),
+                            on_click=cambiar_foto_perfil,
+                        ),
+                    ]
                 ),
                 ft.Text(datos.get("nombre", "Usuario"), size=22, weight="bold", color="#000000"),
                 ft.Text(datos.get("email", ""), size=13, color="#888888"),

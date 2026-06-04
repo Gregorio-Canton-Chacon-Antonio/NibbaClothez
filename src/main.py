@@ -49,7 +49,7 @@ async def start(page: ft.Page):
             elif page.route == "/recuperar":
                 page.views.append(RecuperarView(page, auth_ctrl))
             elif page.route == "/prenda":
-                page.views.append(PrendaDetalleView(page))
+                page.views.append(PrendaDetalleView(page, auth_ctrl))
             page.update()
         except Exception:
             traceback.print_exc()
