@@ -29,6 +29,60 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
                 continue
             if filtro_categoria["valor"] and p.get("categoria") != filtro_categoria["valor"]:
                 continue
+            fotos = [f for f in (p.get("foto") or "").split("|") if f]
+            idx_state = {"i": 0}
+
+            img_widget = ft.Image(
+                src=fotos[0] if fotos else "",
+                fit="cover", width=float("inf"), height=150,
+            ) if fotos else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#CCCCCC")
+
+            def make_nav(fotos_ref, idx_ref, img_ref, delta):
+                def handler(e):
+                    e.stop_propagation = True
+                    idx_ref["i"] = (idx_ref["i"] + delta) % len(fotos_ref)
+                    img_ref.src = fotos_ref[idx_ref["i"]]
+                    img_ref.update()
+                return handler
+
+            nav_controls = []
+            if len(fotos) > 1:
+                btn_style = ft.ButtonStyle(
+                    bgcolor=ft.Colors.with_opacity(0.55, "black"),
+                    shape=ft.CircleBorder(),
+                    padding=ft.padding.all(4),
+                )
+                nav_controls = [
+                    ft.Container(
+                        left=4, top=55,
+                        content=ft.IconButton(
+                            ft.Icons.CHEVRON_LEFT, icon_color="white", icon_size=18,
+                            style=btn_style,
+                            on_click=make_nav(fotos, idx_state, img_widget, -1),
+                        )
+                    ),
+                    ft.Container(
+                        right=4, top=55,
+                        content=ft.IconButton(
+                            ft.Icons.CHEVRON_RIGHT, icon_color="white", icon_size=18,
+                            style=btn_style,
+                            on_click=make_nav(fotos, idx_state, img_widget, 1),
+                        )
+                    ),
+                ]
+
+            imagen_container = ft.Stack(
+                height=150,
+                controls=[
+                    ft.Container(
+                        height=150, border_radius=8, bgcolor="#F5F5F5",
+                        clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                        content=img_widget,
+                    ),
+                    *nav_controls,
+                ]
+            )
+
             grid_productos.controls.append(
                 ft.Container(
                     col={"xs": 6, "sm": 6, "md": 4, "lg": 3},
@@ -42,10 +96,7 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
                     content=ft.Column(
                         spacing=8,
                         controls=[
-                            ft.Container(
-                                height=150, border_radius=8, bgcolor="#F5F5F5", clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                                content=ft.Image(src=p["foto"], fit="cover") if p.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#CCCCCC")
-                            ),
+                            imagen_container,
                             ft.Text(p["titulo"], size=13, weight="bold", max_lines=1, overflow=ft.TextOverflow.ELLIPSIS, color="#000000"),
                             ft.Row(
                                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,

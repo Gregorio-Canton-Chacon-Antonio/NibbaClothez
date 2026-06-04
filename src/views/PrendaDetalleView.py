@@ -9,6 +9,60 @@ CONDICION_LABELS = {
     "usado_aceptable": "Usado - Aceptable",
 }
 
+def _build_carrusel(page, prenda):
+    fotos = [f for f in (prenda.get("foto") or "").split("|") if f]
+    if not fotos:
+        return ft.Container(
+            height=400, bgcolor="#F5F5F5",
+            content=ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, size=100, color="#CCCCCC"),
+            alignment=ft.alignment.center,
+        )
+
+    idx_state = {"i": 0}
+    img_widget = ft.Image(src=fotos[0], fit="contain", width=page.window.width, height=400)
+    counter = ft.Text(f"1 / {len(fotos)}", size=12, color="white") if len(fotos) > 1 else ft.Text("")
+
+    def nav(delta):
+        def handler(_):
+            idx_state["i"] = (idx_state["i"] + delta) % len(fotos)
+            img_widget.src = fotos[idx_state["i"]]
+            counter.value = f"{idx_state['i'] + 1} / {len(fotos)}"
+            img_widget.update()
+            counter.update()
+        return handler
+
+    btn_style = ft.ButtonStyle(
+        bgcolor=ft.Colors.with_opacity(0.55, "black"),
+        shape=ft.CircleBorder(),
+        padding=ft.padding.all(6),
+    )
+
+    stack_controls = [
+        ft.Container(height=400, bgcolor="#F5F5F5", content=img_widget),
+        ft.Container(
+            bottom=8, right=12,
+            bgcolor=ft.Colors.with_opacity(0.5, "black"),
+            border_radius=10,
+            padding=ft.padding.symmetric(horizontal=8, vertical=4),
+            content=counter,
+        ),
+    ]
+
+    if len(fotos) > 1:
+        stack_controls += [
+            ft.Container(
+                left=8, top=175,
+                content=ft.IconButton(ft.Icons.CHEVRON_LEFT, icon_color="white", icon_size=28, style=btn_style, on_click=nav(-1))
+            ),
+            ft.Container(
+                right=8, top=175,
+                content=ft.IconButton(ft.Icons.CHEVRON_RIGHT, icon_color="white", icon_size=28, style=btn_style, on_click=nav(1))
+            ),
+        ]
+
+    return ft.Stack(height=400, controls=stack_controls)
+
+
 def PrendaDetalleView(page: ft.Page):
     prenda = getattr(page, "selected_prenda", None)
     
@@ -47,16 +101,8 @@ def PrendaDetalleView(page: ft.Page):
                     ft.Text("Detalles del artículo", size=18, weight="bold", color="#000000")
                 ])
             ),
-            # Imagen Principal (Estilo Marketplace)
-            ft.Container(
-                height=400,
-                bgcolor="#F5F5F5",
-                content=ft.Image(
-                    src=prenda["foto"],
-                    fit="contain",
-                    width=page.window.width
-                ) if prenda.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, size=100, color="#CCCCCC")
-            ),
+            # Imagen Principal con carrusel
+            _build_carrusel(page, prenda),
             # Información del Producto
             ft.Container(
                 padding=20,

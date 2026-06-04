@@ -159,13 +159,13 @@ def DashboardView(page, prenda_controller):
             notificar("Título, precio y talla son obligatorios")
             return
         
-        foto_principal = fotos_lista[0] if fotos_lista else ""
+        fotos_str = "|".join(fotos_lista) if fotos_lista else ""
         
         exito, mensaje = prenda_controller.guardar_nueva(
             usuario_actual["id_usuario"], input_titulo.value, input_precio.value,
             input_talla.value, select_condicion.value,
             input_marca.value or "Sin marca", input_descripcion.value or "",
-            foto_principal, select_genero.value, select_categoria.value,
+            fotos_str, select_genero.value, select_categoria.value,
         )
         if exito:
             input_titulo.value = input_precio.value = input_talla.value = input_marca.value = input_descripcion.value = ""
