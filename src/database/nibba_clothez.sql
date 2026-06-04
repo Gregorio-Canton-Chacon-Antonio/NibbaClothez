@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `nombre` varchar(100) NOT NULL,
   `email` varchar(150) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `foto_perfil` varchar(255) DEFAULT NULL,
+  `foto_perfil` MEDIUMTEXT DEFAULT NULL,
   `fecha_registro` timestamp NULL DEFAULT current_timestamp(),
   `ultimo_acceso` timestamp NULL DEFAULT NULL,
   `activo` tinyint(1) DEFAULT 1,

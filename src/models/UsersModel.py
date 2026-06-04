@@ -53,15 +53,14 @@ class UsuarioModel:
             fp = user["foto_perfil"]
             if isinstance(fp, (bytes, bytearray)):
                 user["foto_perfil"] = "data:image/jpeg;base64," + base64.b64encode(fp).decode()
-            else:
-                user["foto_perfil"] = None
         return user
 
     def guardar_foto_perfil(self, id_usuario, foto_bytes):
         conn = self.db.get_connection()
         cursor = conn.cursor()
         try:
-            cursor.execute("UPDATE usuario SET foto_perfil=%s WHERE id_usuario=%s", (foto_bytes, id_usuario))
+            b64 = "data:image/jpeg;base64," + base64.b64encode(foto_bytes).decode()
+            cursor.execute("UPDATE usuario SET foto_perfil=%s WHERE id_usuario=%s", (b64, id_usuario))
             conn.commit()
             return True
         except Exception as e:

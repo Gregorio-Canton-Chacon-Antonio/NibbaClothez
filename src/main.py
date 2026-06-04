@@ -1,5 +1,6 @@
 import flet as ft
 import traceback
+from database.init_db import init_db
 from controllers.UserController import AuthController
 from controllers.PrendaController import PrendaController
 from views.LoginView import LoginView
