@@ -81,6 +81,8 @@ class AuthController:
             return True, "Mensaje enviado"
         except Exception as e:
             return False, str(e)
+
+    def guardar_foto_perfil(self, id_usuario, foto_bytes):
         try:
             ok = self.model.guardar_foto_perfil(id_usuario, foto_bytes)
             return ok, "Foto actualizada" if ok else "Error al guardar"
