@@ -70,7 +70,17 @@ class AuthController:
             print(f"[ERROR] obtener_usuario: {e}")
             return None
 
-    def guardar_foto_perfil(self, id_usuario, foto_bytes):
+    def enviar_mensaje_vendedor(self, email_vendedor, nombre_vendedor, nombre_comprador, mensaje):
+        try:
+            yag = yagmail.SMTP(os.getenv("GMAIL_USER"), os.getenv("GMAIL_PASS"))
+            yag.send(
+                to=email_vendedor,
+                subject=f"Nibba Clothez - Mensaje de {nombre_comprador}",
+                contents=f"Hola {nombre_vendedor},\n\n{nombre_comprador} te ha enviado un mensaje:\n\n\"{mensaje}\"\n\nResponde directamente a este correo para contactarlo."
+            )
+            return True, "Mensaje enviado"
+        except Exception as e:
+            return False, str(e)
         try:
             ok = self.model.guardar_foto_perfil(id_usuario, foto_bytes)
             return ok, "Foto actualizada" if ok else "Error al guardar"

@@ -3,6 +3,7 @@ import traceback
 from database.init_db import init_db
 from controllers.UserController import AuthController
 from controllers.PrendaController import PrendaController
+from controllers.MensajeController import MensajeController
 from views.LoginView import LoginView
 from views.dashboardView import DashboardView
 from views.RegistroView import RegistroView
@@ -11,6 +12,8 @@ from views.RecuperarView import RecuperarView
 from views.vistaDeCasa import VistaDeCasa
 from views.PrendaDetalleView import PrendaDetalleView
 from views.PerfilVendedorView import PerfilVendedorView
+from views.ChatView import ChatView
+from views.MensajesView import MensajesView
 
 
 async def start(page: ft.Page):
@@ -29,6 +32,7 @@ async def start(page: ft.Page):
 
     auth_ctrl = AuthController()
     prenda_ctrl = PrendaController()
+    mensaje_ctrl = MensajeController()
 
     file_picker = ft.FilePicker()
     page.services.append(file_picker)
@@ -54,6 +58,10 @@ async def start(page: ft.Page):
                 page.views.append(PrendaDetalleView(page, auth_ctrl))
             elif page.route == "/perfil_vendedor":
                 page.views.append(PerfilVendedorView(page, prenda_ctrl))
+            elif page.route == "/chat":
+                page.views.append(ChatView(page, mensaje_ctrl))
+            elif page.route == "/mensajes":
+                page.views.append(MensajesView(page, mensaje_ctrl))
             page.update()
         except Exception:
             traceback.print_exc()

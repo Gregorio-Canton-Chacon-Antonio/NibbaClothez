@@ -124,6 +124,12 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
             ft.Container(
                 width=32, height=32, border_radius=8,
                 bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
+                content=ft.Icon(ft.Icons.CHAT_ROUNDED, size=18, color="#000000"),
+                on_click=lambda _: page.go("/mensajes"),
+            ),
+            ft.Container(
+                width=32, height=32, border_radius=8,
+                bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
                 content=ft.Icon(ft.Icons.PERSON_ROUNDED, size=18, color="#000000"),
                 on_click=lambda _: page.go("/perfil"),
             ),

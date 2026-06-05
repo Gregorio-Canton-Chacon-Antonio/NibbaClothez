@@ -296,6 +296,7 @@ def PerfilView(page, auth_controller, prenda_controller):
                     spacing=4,
                     controls=[
                 ft.IconButton(ft.Icons.HOME_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/casa")),
+                ft.IconButton(ft.Icons.CHAT_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/mensajes")),
                 ft.IconButton(ft.Icons.CHECKROOM_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/dashboard")),
                         ft.IconButton(ft.Icons.LOGOUT_ROUNDED, icon_color="#000000", on_click=cerrar_sesion),
                     ],

@@ -57,6 +57,20 @@ TABLAS = [
         KEY `id_prenda` (`id_prenda`),
         CONSTRAINT `fk_prenda_foto` FOREIGN KEY (`id_prenda`) REFERENCES `prenda` (`id_prenda`) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci""",
+
+    """CREATE TABLE IF NOT EXISTS `mensaje` (
+        `id_mensaje` int(11) NOT NULL AUTO_INCREMENT,
+        `id_emisor` int(11) NOT NULL,
+        `id_receptor` int(11) NOT NULL,
+        `contenido` text NOT NULL,
+        `fecha` timestamp NULL DEFAULT current_timestamp(),
+        `leido` tinyint(1) DEFAULT 0,
+        PRIMARY KEY (`id_mensaje`),
+        KEY `id_emisor` (`id_emisor`),
+        KEY `id_receptor` (`id_receptor`),
+        CONSTRAINT `fk_mensaje_emisor` FOREIGN KEY (`id_emisor`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE,
+        CONSTRAINT `fk_mensaje_receptor` FOREIGN KEY (`id_receptor`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci""",
 ]
 
 MIGRACIONES = [

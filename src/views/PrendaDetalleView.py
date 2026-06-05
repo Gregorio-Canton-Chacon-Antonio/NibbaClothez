@@ -70,10 +70,22 @@ def PrendaDetalleView(page: ft.Page, auth_controller):
         return ft.View(route="/prenda", controls=[ft.Text("Producto no encontrado")])
 
     vendedor = auth_controller.obtener_usuario(prenda["id_usuario"])
+    usuario_actual = getattr(page, "user_data", None)
 
     def ir_perfil_vendedor(_):
         page.selected_vendedor = vendedor
         page.go("/perfil_vendedor")
+
+    def abrir_chat(_):
+        if not usuario_actual:
+            page.go("/")
+            return
+        page.chat_receptor = {
+            "id_usuario": vendedor["id_usuario"],
+            "nombre": vendedor["nombre"],
+            "foto_perfil": vendedor.get("foto_perfil"),
+        }
+        page.go("/chat")
 
     def info_item(label, value, icon):
         return ft.Row(
@@ -160,6 +172,17 @@ def PrendaDetalleView(page: ft.Page, auth_controller):
                         ft.Divider(height=1, color="#EEEEEE"),
                         ft.Text("Publicado por", size=18, weight="bold", color="#000000"),
                         tarjeta_vendedor,
+                        ft.ElevatedButton(
+                            "Contactar vendedor",
+                            icon=ft.Icons.CHAT_ROUNDED,
+                            height=48,
+                            expand=True,
+                            style=ft.ButtonStyle(
+                                bgcolor="#000000", color="#FFFFFF",
+                                shape=ft.RoundedRectangleBorder(radius=12),
+                            ),
+                            on_click=abrir_chat,
+                        ) if vendedor and (not usuario_actual or usuario_actual["id_usuario"] != prenda["id_usuario"]) else ft.Container(),
                         ft.Container(height=40),
                     ]
                 )
