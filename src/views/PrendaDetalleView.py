@@ -84,6 +84,7 @@ def PrendaDetalleView(page: ft.Page, auth_controller):
             "id_usuario": vendedor["id_usuario"],
             "nombre": vendedor["nombre"],
             "foto_perfil": vendedor.get("foto_perfil"),
+            "prenda_titulo": prenda["titulo"],
         }
         page.go("/chat")
 

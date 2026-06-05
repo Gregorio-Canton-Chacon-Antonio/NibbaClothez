@@ -45,14 +45,46 @@ def ChatView(page: ft.Page, mensaje_controller):
         content_padding=ft.padding.symmetric(horizontal=14, vertical=10),
     )
 
+    prenda_titulo = receptor.get("prenda_titulo")
+
     def enviar(_):
         texto = campo.value.strip()
         if not texto:
             return
-        mensaje_controller.enviar(id_yo, id_receptor, texto)
+        es_primer_mensaje = len(lista.controls) == 0
+        mensaje_controller.enviar(id_yo, id_receptor, texto, prenda_titulo if es_primer_mensaje else None)
         m = {"id_emisor": id_yo, "contenido": texto}
         lista.controls.append(build_burbuja(m))
         campo.value = ""
+        page.update()
+
+    def eliminar_chat(_):
+        def confirmar(_):
+            mensaje_controller.eliminar_conversacion(id_yo, id_receptor)
+            dialogo.open = False
+            page.update()
+            page.go("/mensajes")
+
+        def cancelar(_):
+            dialogo.open = False
+            page.update()
+
+        dialogo = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Eliminar chat", size=16, weight="bold", color="#000000"),
+            content=ft.Text("¿Eliminar todos los mensajes de esta conversación?"),
+            actions=[
+                ft.TextButton("Cancelar", on_click=cancelar),
+                ft.ElevatedButton(
+                    "Eliminar",
+                    style=ft.ButtonStyle(bgcolor="#CC0000", color="#FFFFFF", shape=ft.RoundedRectangleBorder(radius=8)),
+                    on_click=confirmar,
+                ),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+        page.overlay.append(dialogo)
+        dialogo.open = True
         page.update()
 
     foto = receptor.get("foto_perfil")
@@ -79,7 +111,18 @@ def ChatView(page: ft.Page, mensaje_controller):
                     controls=[
                         ft.IconButton(ft.Icons.ARROW_BACK_IOS_NEW_ROUNDED, icon_color="#000000", on_click=lambda _: page.go("/mensajes")),
                         avatar,
-                        ft.Text(receptor["nombre"], size=16, weight="bold", color="#000000"),
+                        ft.Column(
+                            spacing=0, expand=True,
+                            controls=[
+                                ft.Text(receptor["nombre"], size=15, weight="bold", color="#000000"),
+                                ft.Text(
+                                    f"Re: {receptor['prenda_titulo']}",
+                                    size=11, color="#888888",
+                                    max_lines=1, overflow=ft.TextOverflow.ELLIPSIS,
+                                ) if receptor.get("prenda_titulo") else ft.Container(),
+                            ]
+                        ),
+                        ft.IconButton(ft.Icons.DELETE_ROUNDED, icon_color="#CC0000", on_click=eliminar_chat),
                     ]
                 )
             ),

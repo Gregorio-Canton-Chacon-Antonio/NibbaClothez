@@ -63,6 +63,7 @@ TABLAS = [
         `id_emisor` int(11) NOT NULL,
         `id_receptor` int(11) NOT NULL,
         `contenido` text NOT NULL,
+        `prenda_titulo` varchar(200) DEFAULT NULL,
         `fecha` timestamp NULL DEFAULT current_timestamp(),
         `leido` tinyint(1) DEFAULT 0,
         PRIMARY KEY (`id_mensaje`),
@@ -75,6 +76,7 @@ TABLAS = [
 
 MIGRACIONES = [
     "ALTER TABLE usuario MODIFY COLUMN foto_perfil MEDIUMTEXT DEFAULT NULL",
+    "ALTER TABLE mensaje ADD COLUMN IF NOT EXISTS prenda_titulo varchar(200) DEFAULT NULL",
 ]
 
 def init_db():
