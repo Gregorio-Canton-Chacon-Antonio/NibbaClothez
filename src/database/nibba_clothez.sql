@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS `mensaje` (
   `id_emisor` int(11) NOT NULL,
   `id_receptor` int(11) NOT NULL,
   `contenido` text NOT NULL,
+  `prenda_titulo` varchar(200) DEFAULT NULL,
   `fecha` timestamp NULL DEFAULT current_timestamp(),
   `leido` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id_mensaje`),

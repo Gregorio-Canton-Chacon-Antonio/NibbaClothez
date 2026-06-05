@@ -28,6 +28,7 @@ def MensajesView(page: ft.Page, mensaje_controller):
                     "id_usuario": contacto["id_usuario"],
                     "nombre": contacto["nombre"],
                     "foto_perfil": contacto.get("foto_perfil"),
+                    "prenda_titulo": contacto.get("prenda_titulo"),
                 }
                 page.go("/chat")
 
@@ -44,6 +45,7 @@ def MensajesView(page: ft.Page, mensaje_controller):
                                 spacing=2, expand=True,
                                 controls=[
                                     ft.Text(c["nombre"], size=14, weight="bold", color="#000000"),
+                                    ft.Text(f"Interesado en: {c['prenda_titulo']}", size=11, color="#22AA44", weight="bold") if c.get("prenda_titulo") else ft.Container(),
                                     ft.Text(c["ultimo_mensaje"] or "", size=12, color="#888888",
                                             max_lines=1, overflow=ft.TextOverflow.ELLIPSIS),
                                 ]
