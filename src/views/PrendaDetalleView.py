@@ -150,6 +150,8 @@ def PrendaDetalleView(page: ft.Page, auth_controller):
                                 ft.Column(col=6, controls=[info_item("Estado", CONDICION_LABELS.get(prenda.get("condicion"), "—"), ft.Icons.INFO_OUTLINED)]),
                                 ft.Column(col=6, controls=[info_item("Talla", prenda["talla"], ft.Icons.STRAIGHTEN_ROUNDED)]),
                                 ft.Column(col=6, controls=[info_item("Marca", prenda.get("marca", "Sin marca"), ft.Icons.LABEL_OUTLINED)]),
+                                ft.Column(col=6, controls=[info_item("Género", prenda.get("genero", "—"), ft.Icons.PEOPLE_ROUNDED)]),
+                                ft.Column(col=6, controls=[info_item("Categoría", prenda.get("categoria", "—"), ft.Icons.CATEGORY_ROUNDED)]),
                             ]
                         ),
                         ft.Divider(height=1, color="#EEEEEE"),
