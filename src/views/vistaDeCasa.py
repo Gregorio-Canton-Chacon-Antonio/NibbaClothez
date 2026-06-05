@@ -20,14 +20,33 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
     subcategorias = ["Ropa Superior", "Ropa Inferior", "Ropa Exterior"]
 
     grid_productos = ft.ResponsiveRow(spacing=15, run_spacing=15)
+    campo_busqueda = ft.Ref[ft.TextField]()
 
     def cargar_prendas():
         prendas = prenda_controller.obtener_todas()
         grid_productos.controls.clear()
+        query = (campo_busqueda.current.value or "").strip().lower() if campo_busqueda.current else ""
+        mn = min_input.value.strip()
+        mx = max_input.value.strip()
+        precio_min = float(mn) if mn else None
+        precio_max = float(mx) if mx else None
         for p in prendas:
             if filtro_genero["valor"] and p.get("genero") != filtro_genero["valor"]:
                 continue
             if filtro_categoria["valor"] and p.get("categoria") != filtro_categoria["valor"]:
+                continue
+            if query:
+                titulo = (p.get("titulo") or "").lower()
+                descripcion = (p.get("descripcion") or "").lower()
+                if query not in titulo and query not in descripcion:
+                    continue
+            try:
+                precio = float(p.get("precio") or 0)
+            except (ValueError, TypeError):
+                precio = 0
+            if precio_min is not None and precio < precio_min:
+                continue
+            if precio_max is not None and precio > precio_max:
                 continue
             grid_productos.controls.append(
                 ft.Container(
@@ -232,17 +251,15 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
             precio_label.value = f"${mn or '0'} - ${mx or '∞'}"
         else:
             precio_label.value = "Cualquiera"
-        precio_label.update()
         dialogo_precio.open = False
-        page.update()
+        cargar_prendas()
 
     def limpiar_precio(e):
         min_input.value = ""
         max_input.value = ""
         precio_label.value = "Cualquiera"
-        precio_label.update()
         dialogo_precio.open = False
-        page.update()
+        cargar_prendas()
 
     dialogo_precio = ft.AlertDialog(
         modal=True,
@@ -293,6 +310,7 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
         vertical_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             ft.TextField(
+                ref=campo_busqueda,
                 hint_text="Buscar...",
                 height=38,
                 border_radius=10,
@@ -305,6 +323,14 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
                 text_style=ft.TextStyle(color="#000000", size=13),
                 prefix_icon=ft.Icons.SEARCH_ROUNDED,
                 content_padding=ft.padding.symmetric(horizontal=10, vertical=6),
+                on_submit=lambda _: cargar_prendas(),
+            ),
+            ft.Container(
+                width=38, height=38, border_radius=10,
+                bgcolor="#000000",
+                ink=True,
+                on_click=lambda _: cargar_prendas(),
+                content=ft.Icon(ft.Icons.SEARCH_ROUNDED, size=18, color="#FFFFFF"),
             ),
             precio_btn,
         ],
@@ -314,7 +340,7 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
         min_input.value = ""
         max_input.value = str(maximo)
         precio_label.value = f"Menos de ${maximo}"
-        precio_label.update()
+        cargar_prendas()
 
     def make_precio_btn(label, maximo, bgcolor, text_color):
         return ft.Container(
