@@ -144,7 +144,9 @@ def RegistroView(page: ft.Page, auth_controller):
         try:
             resultado, mensaje = auth_controller.registrar_Usuario(nombre, email, password)
             if resultado:
-                notificar("Usuario registrado correctamente")
+                user, _ = auth_controller.login(email, password)
+                if user:
+                    page.user_data = user
                 page.go("/casa")
             else:
                 notificar(mensaje)
