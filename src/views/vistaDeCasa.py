@@ -44,7 +44,7 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
                         controls=[
                             ft.Container(
                                 height=150, border_radius=8, bgcolor="#F5F5F5", clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                                content=ft.Image(src=p["foto"], fit="cover") if p.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#CCCCCC")
+                                content=ft.Image(src=p["foto"].split("|")[0], fit="cover") if p.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#CCCCCC")
                             ),
                             ft.Text(p["titulo"], size=13, weight="bold", max_lines=1, overflow=ft.TextOverflow.ELLIPSIS, color="#000000"),
                             ft.Row(

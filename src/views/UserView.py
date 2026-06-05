@@ -218,7 +218,7 @@ def PerfilView(page, auth_controller, prenda_controller):
                                 width=60, height=60, border_radius=8,
                                 bgcolor="#F0F0F0",
                                 clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                                content=ft.Image(src=prenda["foto"], fit="cover") if prenda.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#AAAAAA"),
+                                content=ft.Image(src=prenda["foto"].split("|")[0], fit="cover") if prenda.get("foto") else ft.Icon(ft.Icons.IMAGE_NOT_SUPPORTED_ROUNDED, color="#AAAAAA"),
                             ),
                             ft.Column(
                                 spacing=4, expand=True,
