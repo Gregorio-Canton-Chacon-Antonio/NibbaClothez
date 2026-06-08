@@ -211,11 +211,11 @@ def VistaDeCasa(page: ft.Page, prenda_controller):
                         content=ft.Icon(ft.Icons.MENU_ROUNDED, size=18, color="#000000"),
                         on_click=toggle_drawer,
                     ),
-                    ft.Container(
+                        ft.Container(
                         width=32, height=32, border_radius=8,
                         bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
                         clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                        content=ft.Image(src="Nibbaz.jpeg", fit="cover"),
+                        content=ft.Image(src="assets/img/Nibbaz.jpeg", fit="cover"),
                     ),
                 ],
             ),

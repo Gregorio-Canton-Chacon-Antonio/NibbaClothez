@@ -107,7 +107,7 @@ def LoginView(page: ft.Page, auth_controller):
                             width=64, height=64, border_radius=0,
                             bgcolor="#F0F0F0", border=ft.border.all(1, "#DDDDDD"),
                             clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                            content=ft.Image(src="Nibbaz.jpeg", fit="cover"),
+                            content=ft.Image(src="assets/img/Nibbaz.jpeg", fit="cover"),
                         ),
                         ft.Text("Nibba Clothez", size=24, weight="bold", color="#000000"),
                         ft.Text("Inicia sesión", size=13, color="#888888"),
