@@ -20,6 +20,7 @@ dependencies = [
 #quitamos el src porque definimos "src" como la raiz
 
 app="main:main"
+seed="database.seed_data:main"
 
 [tool.uv]
 package = true
