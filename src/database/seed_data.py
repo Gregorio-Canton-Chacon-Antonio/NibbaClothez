@@ -11,7 +11,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMG_DIR = os.path.join(BASE_DIR, "img")
+# As images live in the project-level `assets/img` folder, compute project root
+PROJECT_ROOT = os.path.dirname(os.path.dirname(BASE_DIR))
+# Assets root (search images recursively under this folder)
+ASSETS_DIR = os.path.join(PROJECT_ROOT, "assets")
+
 
 USUARIO = {
     "nombre": "Vendedor Demo",
@@ -77,12 +81,18 @@ def conectar():
 
 
 def leer_imagen(nombre):
-    path = os.path.join(IMG_DIR, nombre)
-    if not os.path.exists(path):
-        print(f"  ADVERTENCIA: imagen no encontrada — {path}")
-        return None
-    with open(path, "rb") as f:
-        return f.read()
+    # Busca el archivo por nombre dentro de la carpeta `assets` (y subcarpetas).
+    for root, dirs, files in os.walk(ASSETS_DIR):
+        if nombre in files:
+            path = os.path.join(root, nombre)
+            try:
+                with open(path, "rb") as f:
+                    return f.read()
+            except Exception as e:
+                print(f"  ERROR leyendo imagen {path}: {e}")
+                return None
+    print(f"  ADVERTENCIA: imagen no encontrada en assets — {nombre}")
+    return None
 
 
 def main():
@@ -97,12 +107,12 @@ def main():
         print(f"Usuario demo ya existe (id={id_usuario}), se omite creación.")
     else:
         hashed = bcrypt.hashpw(USUARIO["password"].encode(), bcrypt.gensalt()).decode()
-        foto_path = os.path.join(IMG_DIR, "Nibbaz.jpeg")
         foto_b64 = None
-        if os.path.exists(foto_path):
+        # Buscar imagen de perfil dentro de assets (soporta subcarpetas)
+        perfil_bytes = leer_imagen("Nibbaz.jpeg")
+        if perfil_bytes:
             import base64
-            with open(foto_path, "rb") as f:
-                foto_b64 = "data:image/jpeg;base64," + base64.b64encode(f.read()).decode()
+            foto_b64 = "data:image/jpeg;base64," + base64.b64encode(perfil_bytes).decode()
         cursor.execute(
             "INSERT INTO usuario (nombre, email, password, foto_perfil) VALUES (%s, %s, %s, %s)",
             (USUARIO["nombre"], USUARIO["email"], hashed, foto_b64),
